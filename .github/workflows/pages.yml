@@ -6,7 +6,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [master]
+    # master 是本项目的主分支；main 也监听，因为 GitHub 新建仓库的默认分支
+    # 常被初始化成 main，若只写 master 会导致工作流文件不在默认分支而永远不触发。
+    branches: [master, main]
     paths:
       - "site/**"
       - ".github/workflows/pages.yml"
