@@ -1,74 +1,77 @@
-# GitHub Pages 上线：只剩最后一步
+# Pages 部署被环境保护规则拦住：两种解法
 
-代码已 100% 推送就绪，工作流也已正常触发多次。
-**唯一没完成的是：Pages 功能还没启用。**
+## 报错原文
 
-## 现状
+```
+Branch "master" is not allowed to deploy to github-pages
+due to environment protection rules.
+```
+
+## 原因（已实测确认）
+
+你在 Settings → Pages 选 Source = GitHub Actions 时，GitHub 自动创建了 `github-pages`
+环境，并把**当时的默认分支 `main`** 加进了分支白名单。
+
+实测数据：
+
+- `github-pages` 环境存在，`deployment_branch_policy.custom_branch_policies = true`
+- 白名单里**只有一个分支**：`main`（policy id `62267987`）
+- 我们的代码全在 `master` 上 → 部署被规则拒绝
+
+而 `main` 分支是 GitHub 建仓时的空壳，只有一个 **15 字节的 README.md**，没有任何内容。
+
+---
+
+## 方案 A：给 `master` 加白名单（推荐，改动最小）
+
+**https://github.com/guowang222/Test-Question/settings/environments**
+
+1. 在列表里点进 **`github-pages`**
+2. 找到 **Deployment branches and tags**
+3. 下方会看到已有一条 `main`
+4. 点 **Add deployment branch**
+5. 输入框填 **`master`**，确认
+6. 回到 **Actions** 页面 → 右上角 **Run workflow** 手动跑一次
+
+完成后访问 **https://guowang222.github.io/Test-Question/**
+
+---
+
+## 方案 B：改成允许所有分支（一劳永逸）
+
+同上页面，把 **Deployment branches and tags** 改成 **All branches**。
+
+好处是以后分支改名也不用再来配；代价是少一道限制。
+
+---
+
+## 方案 C：治本 —— 把默认分支改成 master，删掉 main
+
+这个方案最干净，能彻底消除「分支名不一致」带来的一连串问题
+（默认分支 ≠ 部署分支、CI 触发不生效等）。
+
+1. **https://github.com/guowang222/Test-Question/settings/branches**
+   把 Default branch 改成 `master`
+2. 回 `main` 分支页面 → 删掉它
+3. Environments 里的白名单从 `main` 改成 `master`（或设 All branches）
+4. Actions 页面手动 Run workflow 一次
+
+> `main` 里只有 15 字节 README，删掉不丢任何东西。
+> 注意：Gitee 上仍然只有 `master`，不受影响。
+
+---
+
+## 无论选哪个方案
+
+**代码侧已经完全就绪**，不需要改任何东西：
 
 | 项 | 状态 |
 |---|---|
-| 代码推送 | 完成（`master` 与两个远端 hash 一致） |
-| 工作流注册 | 完成（GitHub 已在 master 上识别到 `pages.yml`） |
-| 工作流触发 | 完成（多次自动触发，说明触发条件已修好） |
-| **配置 Pages** | **失败 —— Pages 功能未启用** |
-| 后续部署步骤 | 全部被跳过（依赖上一步） |
-| 线上地址 | 404（站点还不存在） |
+| 代码推送 | 完成，两远端 hash 一致 |
+| 143 个文件 / 5.92 MB / 0 个 PDF | 已确认 |
+| 七套回归自检 | 全部通过 |
+| 工作流触发 | 已正常触发 |
 
-## 你要做的唯一一件事
+之前那几个问题（默认分支是 main 导致工作流不触发、push 偶发 500、pages 过滤导致空提交不触发）**都已修掉**。
 
-打开：
-
-**https://github.com/guowang222/Test-Question/settings/pages**
-
-在 **Build and deployment** 区域，把 **Source** 下拉框改成：
-
-```
-GitHub Actions
-```
-
-点 **Save**。
-
-保存后到 **Actions** 页面，在右上角找到 **Run workflow** 按钮，手动再跑一次：
-
-**https://github.com/guowang222/Test-Question/actions**
-
-等 1~3 分钟，最后一个 run 变绿后，访问：
-
-**https://guowang222.github.io/Test-Question/**
-
-## 如果设置页找不到 Source 下拉框
-
-说明你进的是别的标签页。正确路径是 **Settings → 左侧栏最下面的 Pages**。
-注意 **不是** "Environments"，也不是 "Code and automation" 里的其他项。
-
-## 设置成功后会看到什么
-
-- Actions 页面出现新的 run，7 个步骤全绿：
-  `检出代码 → 尝试自动启用 Pages → 配置 Pages → 校验静态站产物 → 上传 Pages 产物 → 部署 → 冒烟检查`
-- 冒烟检查步骤会打印 `::notice::首页可访问（HTTP 200）` 与 `::notice::首页内容正确`
-- 仓库首页右上角会出现 "Deployments" 标记
-
-## 以后怎么更新站点
-
-改完题库后：
-
-```bat
-D:\项目\k8s\k8s-quiz\scripts\push-github.bat
-```
-
-如果改了题库内容，记得先重新生成数据包：
-
-```
-D:\项目\k8s\k8s-quiz\.venv\Scripts\python.exe D:\项目\k8s\k8s-quiz\scripts\export_site_data.py
-```
-
-推送后 Actions 自动重新发布，**不需要再进网页设置**（Pages 只需开启这一次）。
-
-## 排障速查
-
-| 现象 | 原因 | 处理 |
-|---|---|---|
-| 工作流压根不触发 | 远端默认分支是 `main` 而工作流只监听 `master`（已修） | 已改；如再犯查 `default_branch` |
-| push 报 Internal Server Error | GitHub 写入瞬时故障 | 脚本已内置退避重试，约 2 分钟恢复 |
-| 「配置 Pages」失败 | Pages 未启用 | 按上面第一步开启 |
-| 「校验静态站产物」失败 | `site/` 缺文件 | 跑 `scripts\test_all.py` 定位 |
+设完白名单后到 Actions 页面手动跑一次 `Run workflow` 即可，不需要再改代码。
