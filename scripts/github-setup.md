@@ -1,60 +1,74 @@
-# 开启 GitHub Pages 部署（最后一步，只需做一次）
+# GitHub Pages 上线：只剩最后一步
 
-代码已经全部推送到 GitHub，工作流也已经跑起来了。
-现在只差**在网页上开启 Pages 功能**，开启后工作流会自动重新部署。
+代码已 100% 推送就绪，工作流也已正常触发多次。
+**唯一没完成的是：Pages 功能还没启用。**
 
-## 唯一要做的一步
+## 现状
 
-打开这个页面：
+| 项 | 状态 |
+|---|---|
+| 代码推送 | 完成（`master` 与两个远端 hash 一致） |
+| 工作流注册 | 完成（GitHub 已在 master 上识别到 `pages.yml`） |
+| 工作流触发 | 完成（多次自动触发，说明触发条件已修好） |
+| **配置 Pages** | **失败 —— Pages 功能未启用** |
+| 后续部署步骤 | 全部被跳过（依赖上一步） |
+| 线上地址 | 404（站点还不存在） |
+
+## 你要做的唯一一件事
+
+打开：
 
 **https://github.com/guowang222/Test-Question/settings/pages**
 
-找到 **Build and deployment** → **Source**，下拉选择：
+在 **Build and deployment** 区域，把 **Source** 下拉框改成：
 
 ```
 GitHub Actions
 ```
 
-选完保存即可。等待 1~3 分钟，Actions 会自动重跑并完成部署。
+点 **Save**。
 
-## 部署完成后的地址
+保存后到 **Actions** 页面，在右上角找到 **Run workflow** 按钮，手动再跑一次：
+
+**https://github.com/guowang222/Test-Question/actions**
+
+等 1~3 分钟，最后一个 run 变绿后，访问：
 
 **https://guowang222.github.io/Test-Question/**
 
-## 验证是否成功
+## 如果设置页找不到 Source 下拉框
 
-Actions 页面：https://github.com/guowang222/Test-Question/actions
-最后一个 run 应该是绿色的 ✓，其中「部署」和「冒烟检查」两步会分别确认：
-- 产物上传成功
-- 首页 HTTP 200 且内容包含 `js/static-api.js`
+说明你进的是别的标签页。正确路径是 **Settings → 左侧栏最下面的 Pages**。
+注意 **不是** "Environments"，也不是 "Code and automation" 里的其他项。
 
-## 以后怎么更新
+## 设置成功后会看到什么
 
-在本地改完题库后：
+- Actions 页面出现新的 run，7 个步骤全绿：
+  `检出代码 → 尝试自动启用 Pages → 配置 Pages → 校验静态站产物 → 上传 Pages 产物 → 部署 → 冒烟检查`
+- 冒烟检查步骤会打印 `::notice::首页可访问（HTTP 200）` 与 `::notice::首页内容正确`
+- 仓库首页右上角会出现 "Deployments" 标记
+
+## 以后怎么更新站点
+
+改完题库后：
 
 ```bat
 D:\项目\k8s\k8s-quiz\scripts\push-github.bat
 ```
 
-或手动：
-
-```
-D:\软件\Git\cmd\git.exe -C D:\项目\k8s\k8s-quiz push github master
-```
-
-推送后 Actions 自动重新部署，无需再进网页设置。
-
-注意：如果改了题库，`site/js/questions.data.js` 需要先重新生成：
+如果改了题库内容，记得先重新生成数据包：
 
 ```
 D:\项目\k8s\k8s-quiz\.venv\Scripts\python.exe D:\项目\k8s\k8s-quiz\scripts\export_site_data.py
 ```
 
-## 如果 Actions 又失败了
+推送后 Actions 自动重新发布，**不需要再进网页设置**（Pages 只需开启这一次）。
 
-先看失败在哪一步（点进 run → 点红色步骤看日志）。常见两种：
+## 排障速查
 
-1. 「配置 Pages」失败 → Source 没选 GitHub Actions，回到本页面设置
-2. 「校验静态站产物」失败 → 本地 `site/` 有文件缺失，跑一遍
-   `D:\项目\k8s\k8s-quiz\.venv\Scripts\python.exe D:\项目\k8s\k8s-quiz\scripts\test_all.py`
-   确认七套回归通过后再推
+| 现象 | 原因 | 处理 |
+|---|---|---|
+| 工作流压根不触发 | 远端默认分支是 `main` 而工作流只监听 `master`（已修） | 已改；如再犯查 `default_branch` |
+| push 报 Internal Server Error | GitHub 写入瞬时故障 | 脚本已内置退避重试，约 2 分钟恢复 |
+| 「配置 Pages」失败 | Pages 未启用 | 按上面第一步开启 |
+| 「校验静态站产物」失败 | `site/` 缺文件 | 跑 `scripts\test_all.py` 定位 |
