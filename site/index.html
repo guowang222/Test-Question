@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>答题知识库 · 专属训练</title>
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- 纯静态版：题库数据内联（由 scripts/export_site_data.py 生成） -->
+  <script src="js/vue.global.prod.js"></script>
+  <script src="js/questions.data.js"></script>
+
+  <!-- 数据层：MD 解析器 → localStorage 数据层 → fetch 拦截器。
+       static-api.js 必须在 app.js 之前，它会把 /api/* 请求接住本地处理，
+       这样 app.js 与 Django 版**完全同一份**，无需任何改动。 -->
+  <script src="js/md-import.js"></script>
+  <script src="js/local-store.js"></script>
+  <script src="js/static-api.js"></script>
+
+  <!-- UI（与 frontend/js/app.js 同一文件） -->
+  <script src="js/app.js"></script>
+
+  <!-- 静态版专属：本地数据管理（导出/导入/清空），Django 版没有这层 -->
+  <script src="js/site-extra.js"></script>
+</body>
+</html>

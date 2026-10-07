@@ -1,0 +1,79 @@
+name: Deploy to GitHub Pages
+
+# 静态站（site/）部署。每次推送到 master 时把 site/ 原样发布为 GitHub Pages。
+# 题库数据 js/questions.data.js 已随仓库提交（约 1.5 MB，gzip 后 ~460 KB），
+# 因此这里不需要构建步骤，只需上传产物 + 一步健康检查。
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只允许一个部署，避免并发发布互相覆盖
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      # 自检：产物齐全 + 无后端残留引用。缺文件时直接失败，别把坏站推上去。
+      - name: 校验静态站产物
+        run: |
+          set -euo pipefail
+          for f in index.html css/style.css js/app.js js/local-store.js \
+                   js/static-api.js js/md-import.js js/site-extra.js \
+                   js/questions.data.js js/vue.global.prod.js; do
+            test -s "site/$f" || { echo "::error::缺少产物 site/$f"; exit 1; }
+          done
+          # 静态版不应出现 config.js（那是 Django 版用来配 API_BASE 的）
+          test ! -e site/js/config.js || { echo "::error::静态站不应包含 config.js"; exit 1; }
+          echo "站点体积：$(du -sh site | cut -f1)"
+          echo "题库体积：$(du -h site/js/questions.data.js | cut -f1)"
+
+      - name: 上传 Pages 产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: 部署
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # 部署完立刻回访首页，确认真的能打开（而不是只看 workflow 变绿）
+      - name: 冒烟检查
+        run: |
+          set -euo pipefail
+          url="${{ steps.deployment.outputs.page_url }}"
+          echo "站点地址：$url"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
+            if [ "$code" = "200" ]; then
+              echo "::notice::首页可访问（HTTP $code）"
+              curl -s "$url" | grep -q 'js/static-api.js' \
+                && echo "::notice::首页内容正确" \
+                || { echo "::error::首页内容异常"; exit 1; }
+              exit 0
+            fi
+            echo "等待站点就绪…（第 $i 次，HTTP $code）"
+            sleep 6
+          done
+          echo "::error::站点 60 秒内未就绪"
+          exit 1

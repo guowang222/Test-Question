@@ -15,6 +15,12 @@ db.sqlite3
 # 数据库备份
 backend/backups/
 
+# ---- 静态站（GitHub Pages）----
+# site/js/questions.data.js 由 scripts/export_site_data.py 生成（约 1.5 MB，
+# gzip 后 ~460 KB），**必须提交**：GitHub Pages 直接部署 site/，
+# 不入库线上就是空题库。改题库后重新生成，不要手工编辑，也不要加进忽略列表。
+# 如需临时排查大文件问题，可用 `git update-index --skip-worktree` 临时屏蔽。
+
 # ---- 编辑器 / 系统 ----
 .idea/
 .vscode/
