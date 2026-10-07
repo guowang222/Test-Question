@@ -9,9 +9,8 @@ on:
     # master 是本项目的主分支；main 也监听，因为 GitHub 新建仓库的默认分支
     # 常被初始化成 main，若只写 master 会导致工作流文件不在默认分支而永远不触发。
     branches: [master, main]
-    paths:
-      - "site/**"
-      - ".github/workflows/pages.yml"
+    # 刻意不设 paths 过滤：站点是纯静态、无构建步骤，产物已随仓库提交，
+    # 任何一次 push 都直接重新发布最省心，也不会漏掉"改了别处却忘了同步站点"的情况。
   workflow_dispatch:
 
 permissions:
