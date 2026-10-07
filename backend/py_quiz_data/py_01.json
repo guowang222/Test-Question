@@ -1,0 +1,278 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "Python 属于（　）语言。",
+   "options": [
+    "编译型",
+    "解释型",
+    "汇编型",
+    "机器语言"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 是解释型高级语言：CPython 先把源码编译为字节码，再由 Python 虚拟机（PVM）逐条解释执行，不需要生成独立的机器码可执行文件。同时它是动态类型语言（变量无需声明类型）和强类型语言（不会隐式把 \"1\"+1 混算）。【衍生知识点】Python 3.13 起提供实验性 JIT 编译器，Python 3.14 的官方二进制已包含实验性 JIT，但整体仍以解释执行为主。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "下列哪个不是合法的 Python 变量名？",
+   "options": [
+    "_var",
+    "2var",
+    "var_2",
+    "Var"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "变量名只能由字母、数字、下划线组成，且不能以数字开头，也不能使用关键字。\"2var\" 以数字开头，非法。【衍生知识点】Python 变量名区分大小写（Var 与 var 是两个变量）；惯例上普通变量用小写下划线风格（snake_case），类名用大驼峰（PascalCase）；以双下划线开头并结尾的名称（如 __init__）是魔术方法保留命名。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "Python 3 中 print 是（　）。",
+   "options": [
+    "语句",
+    "内置函数",
+    "关键字",
+    "模块"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 2 中 print 是语句，Python 3 中改为内置函数，必须写成 print(...)，可使用 sep、end、file 等关键字参数。【衍生知识点】print(end=\"\") 可取消换行；print(..., flush=True) 可立即刷新输出缓冲区，在写日志或进度条时很有用。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "Python 用（　）来表示代码块的层次结构。",
+   "options": [
+    "大括号 {}",
+    "缩进",
+    "分号 ;",
+    "圆括号 ()"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 使用缩进划分代码块（同一块必须左对齐），官方惯例是 4 个空格，禁止 Tab 与空格混用，否则抛出 TabError/IndentationError。【衍生知识点】缩进即语法的设计强制了代码可读性；编辑器中建议设置 Tab 键自动转换为 4 空格；PEP 8 还建议顶层函数与类定义之间空两行。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "执行 x = y = 10 后，下列说法正确的是（　）。",
+   "options": [
+    "x 与 y 是两个值相同的独立对象",
+    "x 与 y 指向同一个整数对象 10",
+    "语法错误",
+    "y 是 x 的副本"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "这是链式赋值，等价于 y = 10; x = y，两个名字绑定到同一个 int 对象。对小整数而言由于整数缓存，二者 id 相同。【衍生知识点】对可变对象要小心链式赋值：a = b = [] 会让 a 和 b 共享同一个列表，append 时相互影响，应写 a = []; b = []。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "a, b = 1, 2 执行 a, b = b, a 后，a 和 b 的值是（　）。",
+   "options": [
+    "1, 2",
+    "2, 1",
+    "2, 2",
+    "1, 1"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "右侧 b, a 先被打包为元组 (2, 1)，再解包赋给左侧 a, b，实现了不借助临时变量的交换。【衍生知识点】元组解包是 Python 惯用法，可扩展为 a, *rest = [1,2,3]（星号收集），以及函数返回多个值本质上就是返回元组再解包。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "import this 会输出（　）。",
+   "options": [
+    "模块列表",
+    "Python 之禅",
+    "帮助文档",
+    "版本信息"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "this 是内置彩蛋模块，import 后输出《The Zen of Python》（Python 之禅），如 Beautiful is better than ugly、Simple is better than complex 等 19 条设计哲学。【衍生知识点】Python 之禅体现了 Python 的设计取向：可读性至上（Readability counts）、显式优于隐式（Explicit is better than implicit），这些原则直接反映在语言特性上。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "Python 中单行注释使用（　）。",
+   "options": [
+    "//",
+    "#",
+    "/* */",
+    "--"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 以 # 开头表示单行注释；文档字符串（docstring）用三引号书写，虽不是严格意义的注释，但惯例上用于模块、函数、类的说明并可通过 __doc__ 访问。【衍生知识点】注释应解释\"为什么\"而不是\"做了什么\"；工具 pydoc、help() 以及 Sphinx 文档生成都依赖 docstring。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "下列哪个不是 Python 关键字？",
+   "options": [
+    "pass",
+    "lambda",
+    "eval",
+    "yield"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "eval 是内置函数（动态求值字符串表达式），不是关键字；pass、lambda、yield 都是关键字。可用 keyword.kwlist 查看全部关键字（Python 3.12 起共 35 个，另加 soft keyword match/case/type 等）。【衍生知识点】Python 3.10 引入的 match...case 中 match 与 case 是\"软关键字\"，仍可作变量名；查看关键字可用 import keyword; print(keyword.kwlist)。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "if __name__ == \"__main__\" 的作用是（　）。",
+   "options": [
+    "判断 Python 版本",
+    "仅当脚本被直接运行时才执行其下的代码",
+    "声明主函数",
+    "导入主模块"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "脚本被直接运行时 __name__ 为 \"__main__\"，被导入为模块时 __name__ 是模块名，因此该判断可以让文件既能作为模块复用、又能直接执行测试代码。【衍生知识点】这是 Python 程序入口的惯用法，等价于其他语言的 main；配合 -m 参数运行模块（python -m package.module）时 __name__ 同样是 \"__main__\"。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "关于 Python 交互式解释器（REPL），下列说法错误的是（　）。",
+   "options": [
+    "提示符为 >>>",
+    "输入表达式会立即显示结果",
+    "变量 _ 保存上一次显示的结果",
+    "退出 REPL 必须关闭终端"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "退出 REPL 可用 exit()、quit() 或 Ctrl+D（Linux/macOS）/ Ctrl+Z 回车（Windows），无需关闭终端。A、B、C 均为 REPL 的标准行为。【衍生知识点】Python 3.13 起默认 REPL（PyREPL）支持多行编辑、语法高亮和历史浏览；Python 3.14 REPL 高亮进一步增强。IPython 提供更强大的替代（Tab 补全、? 查看帮助、%magic 魔法命令）。"
+  },
+  {
+   "type": "choice",
+   "category": "基础语法与环境",
+   "question": "PEP 8 对代码缩进的官方建议是（　）。",
+   "options": [
+    "使用 Tab",
+    "使用 4 个空格",
+    "使用 8 个空格",
+    "随意，只要一致"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "PEP 8 规定每级缩进用 4 个空格，禁止 Tab 与空格混用；还建议每行不超过 79 字符（代码）/72 字符（docstring）。【衍生知识点】PEP 8 是 Python 官方风格指南，配套工具 autopep8、black、flake8、ruff 可自动格式化与检查；现代项目常用 black（不妥协格式化）+ ruff（高速 linter）。"
+  },
+  {
+   "type": "blank",
+   "category": "基础语法与环境",
+   "question": "Python 交互式解释器的主提示符是________。",
+   "answer": [
+    [
+     ">>>",
+     "\\>\\>\\>"
+    ]
+   ],
+   "explanation": "主提示符 >>> 表示等待输入新语句，续行提示符为 ...。【衍生知识点】在 REPL 中输入不完整的代码块（如 for 循环头）按回车会进入 ... 续行模式；Python 3.13+ 的 PyREPL 支持在此模式下语法高亮。"
+  },
+  {
+   "type": "blank",
+   "category": "基础语法与环境",
+   "question": "在命令行查看 Python 版本的命令是________（写一种即可）。",
+   "answer": [
+    [
+     "python --version",
+     "python -V",
+     "python3 --version",
+     "python3 -V",
+     "py --version"
+    ]
+   ],
+   "explanation": "python --version 或短参数 python -V（注意大写 V）会打印如 Python 3.13.12 的版本信息。【衍生知识点】在脚本内部可用 sys.version、sys.version_info 或 platform.python_version() 获取版本；sys.version_info >= (3, 10) 可做版本判断。"
+  },
+  {
+   "type": "blank",
+   "category": "基础语法与环境",
+   "question": "Python 源码文件默认的字符编码是________。",
+   "answer": [
+    [
+     "UTF-8",
+     "utf-8",
+     "utf8"
+    ]
+   ],
+   "explanation": "PEP 3120 规定 Python 3 源文件默认 UTF-8 编码，因此源码中可直接写中文，无需像 Python 2 那样声明 # -*- coding: utf-8 -*-。【衍生知识点】如确需其他编码，可在文件第一行（或第二行）写编码声明；读写文件时的默认编码取决于 locale（Windows 下可能是 GBK），跨平台建议显式传 encoding=\"utf-8\"。"
+  },
+  {
+   "type": "blank",
+   "category": "基础语法与环境",
+   "question": "交换变量 a 和 b 的一行语句是：a, b = ________。",
+   "answer": [
+    [
+     "b, a",
+     "(b, a)"
+    ]
+   ],
+   "explanation": "右侧元组 (b, a) 先求值打包，再解包赋值，完成交换。【衍生知识点】解包要求左侧变量数与右侧元素数一致，否则 ValueError；星号表达式 *mid 可以收集任意多个中间元素。"
+  },
+  {
+   "type": "blank",
+   "category": "基础语法与环境",
+   "question": "x = 10 后，type(x) 返回的是________类型。",
+   "answer": [
+    [
+     "int",
+     "<class 'int'>",
+     "整数"
+    ]
+   ],
+   "explanation": "Python 3 的 int 是任意精度整数，不会像 C/Java 那样溢出。【衍生知识点】type() 返回类型对象；更推荐用 isinstance(x, int) 判断类型，因为它支持子类判定；Python 中一切皆对象，int 也是类。"
+  },
+  {
+   "type": "blank",
+   "category": "基础语法与环境",
+   "question": "语句 a = 1; b = 2; print(a, b, sep=\", \") 的输出是________。",
+   "answer": [
+    [
+     "1, 2"
+    ]
+   ],
+   "explanation": "print 的 sep 参数指定多个参数之间的分隔符，默认是空格；end 参数指定结尾，默认换行 \\n。【衍生知识点】print(*items) 可解包打印；f-string 逐渐取代 print 格式化：print(f\"{a}, {b}\")。"
+  },
+  {
+   "type": "short",
+   "category": "基础语法与环境",
+   "question": "简述解释型语言与编译型语言的区别，并说明 CPython 执行 Python 代码的大致流程。",
+   "answer": [
+    "编译型语言（如 C/C++）在运行前由编译器一次性把源码编译成目标平台的机器码，运行快但需针对平台重新编译；解释型语言由解释器逐句读取并执行，跨平台性好、开发迭代快，但运行速度通常较慢。CPython 执行流程：源码 .py → 词法/语法分析生成 AST → 编译为字节码（.pyc 缓存在 __pycache__）→ PVM 逐条解释执行字节码。【衍生知识点】.pyc 只针对被导入的模块生成，主脚本不缓存；Python 3.13 引入实验性 JIT（复制与删除式 JIT），3.14 官方二进制内置实验 JIT，可按需开启以加速热点代码。"
+   ],
+   "explanation": "理解执行模型有助于理解性能优化与 .pyc 缓存。"
+  },
+  {
+   "type": "practical",
+   "category": "基础语法与环境",
+   "question": "编写脚本 demo.py：打印 Hello, Python! 以及当前 Python 版本号，并演示注释与多行字符串的用法。",
+   "answer": [
+    "import sys\nprint(\"Hello, Python!\")   # 单行注释：打印问候语\nprint(\"Python 版本:\", sys.version_info[:3])\n\n\"\"\"\n这是文档字符串（三引号字符串），\n常用于模块/函数说明。\n\"\"\"\n\n运行：python demo.py，输出 Hello, Python! 与 (3, 13, 12) 形式的版本三元组。"
+   ],
+   "explanation": "sys.version_info 是命名元组，[:3] 取 (major, minor, micro)。"
+  }
+ ]
+}

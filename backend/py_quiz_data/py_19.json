@@ -1,0 +1,270 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "函数注解 def add(a: int, b: int) -> int 的作用是（　）。",
+   "options": [
+    "运行时强制类型检查",
+    "为工具（IDE、mypy）提供类型信息，Python 运行时默认不做强制检查",
+    "加速运算",
+    "声明常量"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "注解存入 __annotations__，运行时不校验；静态检查由 mypy/pyright 等完成。【衍生知识点】PEP 649（3.14）：注解改为延迟求值，前向引用无需再加引号，annotationlib 可检查；运行时强制校验可用 pydantic 等库。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "表示“整数或字符串列表”的正确注解是（　）。",
+   "options": [
+    "list[int | str]（3.10+，旧版用 List[Union[int, str]]）",
+    "list(int, str)",
+    "array[int|str]",
+    "list{int,str}"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "3.10 起 | 代替 Union；内置泛型 list[...] 替代 typing.List（3.9+）。【衍生知识点】旧写法 typing.List[Union[int, str]] 仍兼容；Optional[int] 即 int | None；Sequence/Iterable 等抽象类型优先于具体容器类型（鸭子类型友好）。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "f-string 引入于哪个版本？（　）",
+   "options": [
+    "Python 3.0",
+    "Python 3.6",
+    "Python 3.10",
+    "Python 2.7"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "PEP 498 在 3.6 引入 f-string；3.8 加 {expr=} 自描述；3.12 放宽嵌套引号限制；3.14 引入模板字符串 t-string（PEP 750）作为其安全扩展。【衍生知识点】t-string 产生 Template 对象不直接拼接，由处理库决定转义策略，用于 HTML/SQL 防注入。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "海象运算符 :=（3.8+）的作用是（　）。",
+   "options": [
+    "比较是否相等",
+    "在表达式内部赋值，如 while (line := f.readline()):",
+    "定义常量",
+    "位运算"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "赋值表达式让“取值-判断-使用”一步完成，减少重复计算与临时变量。【衍生知识点】典型场景：while 循环读取、推导式内条件赋值 [y for x in data if (y := f(x)) > 0]；不要滥用，普通赋值仍用 =。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "match...case 结构化模式匹配引入的版本与对应 PEP 是（　）。",
+   "options": [
+    "3.8 / PEP 570",
+    "3.10 / PEP 634",
+    "3.12 / PEP 695",
+    "3.6 / PEP 498"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "3.10（PEP 634-636）引入 match 语句：字面量、捕获、序列/映射/类模式与守卫。【衍生知识点】3.12（PEP 695）引入类型参数新语法 def f[T](x: T) 与 type 别名语句；3.14（PEP 649）延迟注解。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "dataclass 与 NamedTuple 都可表示记录类型，关于二者说法正确的是（　）。",
+   "options": [
+    "NamedTuple 可变",
+    "dataclass 默认可变，可配置 frozen=True 变不可变；NamedTuple 本质是元组，不可变",
+    "两者都不可变",
+    "dataclass 不能有方法"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "dataclass 是普通类生成器，灵活可变；NamedTuple 继承元组，支持解包与索引且不可变。【衍生知识点】需要哈希作字典键：frozen dataclass 或 NamedTuple；需要字段变更：dataclass；TypedDict 则为 dict 提供字段级类型（3.8+）。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "Python 3.13 的两个标志性新特性是（　）。",
+   "options": [
+    "f-string 与 async/await",
+    "实验性 JIT 编译器与实验性自由线程（no-GIL）构建，以及新版交互式解释器",
+    "match 语句与海象运算符",
+    "t-string 与延迟注解"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "3.13（2024-10）带来实验 JIT、free-threading 实验构建、PyREPL 改进、移除“死电池”模块（PEP 594：cgi、telnetlib 等）。【衍生知识点】3.14（2025-10）：t-string、延迟注解、多解释器、compression.zstd、自由线程转正（PEP 779）、REPL 语法高亮、实验 JIT 进入官方二进制。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "typing.Protocol（3.8+，静态鸭子类型）的意义是（　）。",
+   "options": [
+    "运行时强制接口继承",
+    "定义结构化接口：只要对象具有协议声明的方法/属性即视为符合，无需显式继承",
+    "网络协议工具",
+    "生成文档"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "class SupportsClose(Protocol): def close(self): ...，任何有 close 方法的类都满足该类型，mypy 静态判定。【衍生知识点】@runtime_checkable 让 isinstance 也可按结构检查（只查方法存在性）；Protocol 是 Go 接口风格，比 ABC 更松耦合。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "zip(*strict=True)（3.10+）的作用是（　）。",
+   "options": [
+    "压缩数据",
+    "长度不一致时抛 ValueError，帮助发现数据 bug",
+    "忽略多余元素（默认行为）",
+    "加速 zip"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "默认 zip 截断到最短；strict=True 让不等长报错，防止静默丢数据。【衍生知识点】itertools.zip_longest(fillvalue=...) 补齐到最长；数据处理管道中 strict=True 是防御性编程利器。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "TypeVar 与泛型函数 def first[T](items: list[T]) -> T（PEP 695，3.12+）中 T 的含义是（　）。",
+   "options": [
+    "固定类型 int",
+    "类型变量：表示“某种类型”，输入输出一致时由类型检查器推导绑定",
+    "异常类型",
+    "线程类型"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "T 让 first([1,2]) 推导返回 int、first([\"a\"]) 推导 str，保证输入输出类型关联。【衍生知识点】旧写法 T = TypeVar(\"T\") 仍可用；约束 TypeVar(\"T\", bound=Number) 限定上界；泛型类 class Stack[T]（3.12+）同步简化。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "字典合并运算符 | 与 f-string 之外的另一个 3.9 实用特性是（　）。",
+   "options": [
+    "内置泛型容器注解 list[int]、dict[str, int] 直接可用（PEP 585）",
+    "async/await",
+    "walrus",
+    "match"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "PEP 585 让内置类型可直接作泛型注解，不再需要 typing.List；3.9 还带来 str.removeprefix/removesuffix 方法。【衍生知识点】removeprefix/removesuffix 终结了 if s.startswith(p): s = s[len(p):] 的样板代码。"
+  },
+  {
+   "type": "choice",
+   "category": "类型注解与新特性",
+   "question": "Pydantic、FastAPI 等库能“运行时强制类型”的原理是（　）。",
+   "options": [
+    "修改了 Python 解释器",
+    "读取 __annotations__ 并在运行时校验/转换数据（利用注解生态）",
+    "重写了 type",
+    "依赖 GIL"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "注解虽不被语言强制，但库可主动消费：pydantic 校验+转换，FastAPI 据此生成文档与参数解析。【衍生知识点】PEP 649 延迟注解让含前向引用/复杂表达式的注解更健壮；typing.get_type_hints / annotationlib.get_annotations 是标准读取入口。"
+  },
+  {
+   "type": "blank",
+   "category": "类型注解与新特性",
+   "question": "表示“可能为 None 的整数”的两种注解写法：Optional[int] 与 int | ________（3.10+）。",
+   "answer": [
+    [
+     "None"
+    ]
+   ],
+   "explanation": "int | None 与 Optional[int] 等价。【衍生知识点】| 语法的本质是 types.UnionType；Optional 从不意味着“可选参数”，而是“可为 None”。"
+  },
+  {
+   "type": "blank",
+   "category": "类型注解与新特性",
+   "question": "Python 3.12 中定义类型别名的专用语句是________（如 type Vector = list[float]）。",
+   "answer": [
+    [
+     "type"
+    ]
+   ],
+   "explanation": "PEP 695 type 语句创建懒求值别名，替代旧式 Vector = List[float] 赋值。【衍生知识点】type 语句创建 TypeAliasType 实例；旧别名与 typing.TypeAlias 注解仍兼容。"
+  },
+  {
+   "type": "blank",
+   "category": "类型注解与新特性",
+   "question": "3.10 引入的结构化模式匹配语句关键字是 match 与________。",
+   "answer": [
+    [
+     "case"
+    ]
+   ],
+   "explanation": "match subject: case pattern: ...；case _ 通配兜底。【衍生知识点】模式可解包序列/字典、实例化类模式 Point(x=0)、或模式 |、加 if 守卫。"
+  },
+  {
+   "type": "blank",
+   "category": "类型注解与新特性",
+   "question": "海象运算符的符号是________。",
+   "answer": [
+    [
+     ":=",
+     "（:=）"
+    ]
+   ],
+   "explanation": "赋值表达式 PEP 572，在表达式内完成赋值。【衍生知识点】名字取自海象眼睛与獠牙的形似；用于 while 与推导式最有价值。"
+  },
+  {
+   "type": "blank",
+   "category": "类型注解与新特性",
+   "question": "Python 3.14 引入的模板字符串使用前缀________（如 t\"<b>{value}</b>\"）。",
+   "answer": [
+    [
+     "t",
+     "t-string 前缀 t"
+    ]
+   ],
+   "explanation": "PEP 750：t-string 产生 Template 对象（strings+interpolations），由处理函数决定转义，防止注入。【衍生知识点】与 f-string 同语法但求值延迟；预期用于 HTML 模板、SQL 构造器等库。"
+  },
+  {
+   "type": "blank",
+   "category": "类型注解与新特性",
+   "question": "PEP 649 使类型注解的求值变为________（deferred），前向引用不再需要引号。",
+   "answer": [
+    [
+     "延迟求值（用到时才求值）"
+    ]
+   ],
+   "explanation": "3.14 起注解存为 annotate 函数，按需以 VALUE/FORWARDREF/STRING 三种格式求值。【衍生知识点】自引用类注解 class Node: next: Node | None 无需 from __future__ import annotations；性能上定义时几乎零成本。"
+  },
+  {
+   "type": "short",
+   "category": "类型注解与新特性",
+   "question": "梳理 Python 3.8 到 3.14 每个版本一个代表性特性。",
+   "answer": [
+    "3.8：海象运算符 := 与仅位置参数 /（PEP 570/572）；3.9：字典合并 | 与内置泛型注解 list[int]（PEP 584/585）；3.10：match...case 结构化模式匹配（PEP 634）与联合类型 int | None（PEP 604）；3.11：异常组 ExceptionGroup/except* 与大幅提速（Faster CPython）；3.12：PEP 695 泛型新语法与 f-string 放宽、类型参数语句；3.13：实验性 JIT、自由线程实验构建、PyREPL；3.14：模板字符串 t-string（PEP 750）、延迟注解（PEP 649）、多解释器标准库（PEP 734）、自由线程正式支持（PEP 779）。【衍生知识点】升级前查 Porting 文档关注移除项（3.13 移除 cgi/telnetlib 等“死电池”，3.12 移除 distutils）。"
+   ],
+   "explanation": "版本演进脉络是面试与升级评估的高频考点。"
+  },
+  {
+   "type": "practical",
+   "category": "类型注解与新特性",
+   "question": "用现代类型注解定义函数 top_n(items: list[tuple[str, int]], n: int = 3) -> list[tuple[str, int]]：返回按第二项降序的前 n 条，并用 match 语句对返回结果做空/非空分支打印。",
+   "answer": [
+    "def top_n(items: list[tuple[str, int]], n: int = 3) -> list[tuple[str, int]]:\n    return sorted(items, key=lambda p: p[1], reverse=True)[:n]\n\ndata = [(\"a\", 3), (\"b\", 9), (\"c\", 1), (\"d\", 7)]\nresult = top_n(data, 2)\n\nmatch result:\n    case []:\n        print(\"无数据\")\n    case [(first_name, first_score), *rest]:\n        print(f\"第一名 {first_name}: {first_score}，共 {1 + len(rest)} 条\")\n\n输出：第一名 b: 9，共 2 条。"
+   ],
+   "explanation": "sorted+key+切片三件套；match 的序列模式同时完成判空与解包，比 if/else 更表达意图。"
+  }
+ ]
+}

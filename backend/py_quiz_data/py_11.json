@@ -1,0 +1,280 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "class B(A) 中调用父类方法的正确方式是（　）。",
+   "options": [
+    "A.__init__(self)",
+    "super().__init__()",
+    "parent.__init__()",
+    "super(self).__init__()"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "super() 返回代理对象，沿 MRO 找到下一个类并绑定当前实例，单继承等价 A.__init__(self) 但在多继承下更正确。【衍生知识点】super() 不一定是“父类”，而是 MRO 中的下一个协作类——这是协作式多继承（如 mixin）的基础；Python 2 需显式 super(B, self)。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "类 C(B, A) 的 MRO（方法解析顺序）使用（　）。",
+   "options": [
+    "深度优先",
+    "C3 线性化算法",
+    "随机",
+    "字母序"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 2.3 起 MRO 采用 C3 线性化，保证子类先于父类、且保持各父类声明顺序、解决菱形继承的歧义。【衍生知识点】查看：C.__mro__ 或 C.mro()；若 C3 无法满足约束（如父类顺序矛盾）定义类时直接抛 TypeError；MRO 是理解 super 行为的关键。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "多态在 Python 中的典型体现是（　）。",
+   "options": [
+    "函数重载（同名不同参）",
+    "不同对象实现同名方法，调用方不关心具体类型（鸭子类型）",
+    "必须继承同一父类",
+    "运算符重载禁止"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 没有传统函数重载；多态靠鸭子类型：只要对象有该方法就能调用，如 len() 对 str/list/File 均有效。【衍生知识点】协议化抽象：collections.abc、typing.Protocol（3.8+）支持“静态鸭子类型”检查；functools.singledispatch 可实现基于类型的函数重载。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "@property 的作用是（　）。",
+   "options": [
+    "定义类属性",
+    "把方法包装成属性访问，可加 getter/setter/deleter 控制",
+    "声明私有变量",
+    "提高访问速度"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "@property 让 obj.name 触发方法调用，实现计算属性与读写控制，接口不变即可加校验逻辑。【衍生知识点】@x.setter 定义赋值行为，可在 setter 中抛 ValueError 实现只读/校验；property 还可用于把原有公开属性平滑迁移为受控属性而不破坏 API。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "魔术方法 __getitem__ 被哪个语法触发？",
+   "options": [
+    "obj[key]",
+    "obj.key",
+    "obj()",
+    "obj + x"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "下标语法 obj[key] 调用 __getitem__(key)；配套 __setitem__、__delitem__、__contains__。【衍生知识点】obj.attr 找 __getattr__/__getattribute__；obj() 找 __call__；obj+x 找 __add__/__radd__；实现这些方法即可让自定义类表现如内置容器。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "@dataclass（3.7+，dataclasses 模块）自动生成的是（　）。",
+   "options": [
+    "只有 __init__",
+    "__init__、__repr__、__eq__ 等",
+    "数据库表",
+    "线程"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "@dataclass 根据类注解字段自动生成 __init__（字段可带 default/default_factory）、__repr__、__eq__ 等。【衍生知识点】frozen=True 生成不可变（可哈希）数据类；slots=True（3.10+）省内存；field(default_factory=list) 处理可变默认值；3.14 延迟注解让 dataclass 前向引用更省心。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "元类（metaclass）是（　）。",
+   "options": [
+    "类的父类",
+    "用来创建类的“类”，默认为 type",
+    "实例的模板",
+    "装饰器"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "类也是对象，由元类实例化产生；class Foo(metaclass=Meta) 让 Meta 控制“类的创建”过程（如自动注册、API 校验、ORM 模型）。【衍生知识点】type(Foo) 是 type；type(\"X\", (object,), {}) 可动态造类；日常 99% 场景用 __init_subclass__ 钩子或装饰器即可，元类是最后手段。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "抽象基类（abc 模块）的作用是（　）。",
+   "options": [
+    "让类不能被实例化，强制子类实现指定方法",
+    "加速类创建",
+    "自动生成文档",
+    "替代继承"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "继承 ABC 且含 @abstractmethod 的类不能直接实例化，未实现抽象方法的子类实例化时报 TypeError。【衍生知识点】抽象方法可以有实现体供子类 super() 调用；ABC 还支持“虚拟子类”注册（register），让无关类通过 isinstance 检查；typing.Protocol 是更轻的替代（结构化类型）。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "__slots__ = (\"x\", \"y\") 的效果是（　）。",
+   "options": [
+    "声明私有属性",
+    "禁止实例动态添加 __slots__ 之外的属性，节省内存",
+    "自动生成方法",
+    "使类变抽象"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "slots 用类级描述符替代每实例的 __dict__，百万级小对象可省大量内存，且属性访问略快。【衍生知识点】副作用：无 __dict__、与多继承含 __dict__ 的类冲突、默认值需在 __init__ 设置；dataclass(slots=True) 已封装此优化。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "关于 __init_subclass__ 钩子（3.6+），正确的是（　）。",
+   "options": [
+    "在定义子类时自动执行，可用于注册/校验子类",
+    "在每个实例创建时执行",
+    "是元类专属方法",
+    "必须手动调用"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "父类定义 __init_subclass__(cls, **kw)，任何子类定义时自动调用，是替代简单元类的官方推荐方式。【衍生知识点】插件注册表惯用法：在 __init_subclass__ 中把 cls 按名字加入 dict，配合 match 或字典分发实现命令路由；kwargs 可捕获 class 语句的类关键字参数。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "组合（composition）优于继承的典型场景是（　）。",
+   "options": [
+    "Car 与 Engine 的关系——Car 拥有 Engine 而非是 Engine",
+    "Dog 是 Animal",
+    "Manager 是 Employee",
+    "Circle 是 Shape"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "“is-a”用继承，“has-a”用组合；Car 拥有引擎，用属性持有 Engine 实例，避免继承带来的强耦合。【衍生知识点】组合+委托更易测试与替换组件；继承树宜浅（≤3 层），跨层复用优先 mixin（如 Django 泛型视图）或组合；Go 等语言干脆没有继承。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象高级",
+   "question": "__call__ 方法的作用是（　）。",
+   "options": [
+    "让实例可以像函数一样被调用",
+    "构造实例",
+    "字符串化",
+    "比较相等"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "定义了 __call__ 的实例 obj() 会调用 obj.__call__()，装饰器类、策略对象、 functor 常用它。【衍生知识点】类本身可调用是 type.__call__ 的功劳（触发 __new__/__init__）；partial 对象也实现了 __call__；判断可调用用 callable(obj)。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象高级",
+   "question": "查看类 C 的方法解析顺序可访问 C.________（属性）。",
+   "answer": [
+    [
+     "__mro__",
+     "mro()"
+    ]
+   ],
+   "explanation": "__mro__ 是元组形式的线性化结果；C.mro() 方法形式返回列表。【衍生知识点】MRO 决定属性查找与 super() 的“下一个”指向；C3 线性化失败时类定义直接报错。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象高级",
+   "question": "把方法包装为属性用装饰器________；定义其赋值行为用 @属性名.________。",
+   "answer": [
+    [
+     "@property"
+    ],
+    [
+     "setter"
+    ]
+   ],
+   "explanation": "@property 定义读，@name.setter 定义写，@name.deleter 定义删除。【衍生知识点】property 对象是数据描述符，优先级高于实例 __dict__，这正是它能拦截赋值的原因。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象高级",
+   "question": "实现不可变对象（如所有属性只读）最简单的方式是使用 @dataclass 的________参数（填 True）。",
+   "answer": [
+    [
+     "frozen",
+     "frozen=True"
+    ]
+   ],
+   "explanation": "frozen=True 生成的类赋值即抛 FrozenInstanceError，并自动提供 __hash__。【衍生知识点】namedtuple 与 NamedTuple 也是不可变记录；真正的不可变需要防御性拷贝可变字段（tuple 化列表）。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象高级",
+   "question": "对象作为字典键必须同时定义________与________两个魔术方法。",
+   "answer": [
+    [
+     "__hash__"
+    ],
+    [
+     "__eq__"
+    ]
+   ],
+   "explanation": "哈希定位桶，__eq__ 处理冲突确认相等；二者必须一致（相等对象哈希必相同）。【衍生知识点】重写 __eq__ 后 Python 自动把 __hash__ 置 None，这是常见坑；frozen dataclass 自动处理。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象高级",
+   "question": "运算符 obj1 < obj2 调用魔术方法________；obj1 + obj2 优先调用________，不存在则找 __radd__。",
+   "answer": [
+    [
+     "__lt__"
+    ],
+    [
+     "__add__"
+    ]
+   ],
+   "explanation": "比较族：__lt__/__le__/__gt__/__ge__/__eq__/__ne__；算术族有反射版本 __radd__ 等。【衍生知识点】@functools.total_ordering 只需实现 __eq__ 与一个比较即可补全全部排序；+= 先找 __iadd__。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象高级",
+   "question": "class Foo: 中 Foo 是 type 的实例，因此说 type 是所有类默认的________。",
+   "answer": [
+    [
+     "元类",
+     "metaclass"
+    ]
+   ],
+   "explanation": "type 实例化产生普通类；自定义元类通过 class Foo(metaclass=Meta) 指定。【衍生知识点】检查：type(Foo) is type；继承链与元类链冲突时（两个不同元类的父类）无法定义子类。"
+  },
+  {
+   "type": "short",
+   "category": "面向对象高级",
+   "question": "解释 C3 线性化与菱形继承问题，Python 如何解决。",
+   "answer": [
+    "菱形继承：D 继承 B、C，而 B、C 都继承 A，D 的方法查找顺序若用简单深度优先会先到 B→A，导致 A 的方法在 C 之前被找到、C 的重写被跳过，且 super 调用可能重复初始化 A。Python 2.3 起用 C3 线性化：保证 1) 子类排在所有父类之前；2) 保持父类声明顺序；3) 每个父类只出现一次且各父类的相对顺序一致。D 的 MRO 为 D→B→C→A→object，super() 沿此链逐级协作，配合各方法内部统一调用 super().__init__() 即可让 A 恰好初始化一次。【衍生知识点】mixin 设计要求：mixin 应放在基类之前、方法尽量调用 super 而非具体类名；顺序错误会改变 MRO 行为。"
+   ],
+   "explanation": "C3 + super 协作是多重继承的核心考点。"
+  },
+  {
+   "type": "practical",
+   "category": "面向对象高级",
+   "question": "用 @property 实现类 Circle：radius 可读写（负数赋值抛 ValueError），area 只读属性按 3.14159*r*r 计算。",
+   "answer": [
+    "class Circle:\n    def __init__(self, radius):\n        self.radius = radius  # 走 setter 校验\n\n    @property\n    def radius(self):\n        return self._radius\n\n    @radius.setter\n    def radius(self, r):\n        if r < 0:\n            raise ValueError(\"半径不能为负\")\n        self._radius = r\n\n    @property\n    def area(self):\n        return 3.14159 * self._radius ** 2\n\nc = Circle(2)\nprint(c.area)      # 12.56636\nc.radius = 3\nprint(c.area)      # 28.27431\nc.radius = -1      # ValueError\n\n输出 12.56636 与 28.27431，负半径抛异常。"
+   ],
+   "explanation": "内部存储用 _radius 避免与 property 递归冲突；math.pi 更精确。"
+  }
+ ]
+}

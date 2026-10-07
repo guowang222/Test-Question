@@ -1,0 +1,271 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "3 / 2 的结果是（　）。",
+   "options": [
+    "1",
+    "1.5",
+    "1.0",
+    "2"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 3 中 / 是真除法，永远返回 float，3/2 = 1.5；Python 2 中整数相除会截断。想要整数商应使用 //。【衍生知识点】/ 与 // 的区分是 Python 2→3 的著名不兼容变更；from __future__ import division 可让 Python 2 也采用真除法。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "-7 // 2 的结果是（　）。",
+   "options": [
+    "-3",
+    "-4",
+    "3",
+    "-3.5"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "// 是地板除（floor division），结果向下取整：-7/2 = -3.5，向下取整为 -4。正数方向 7//2=3。【衍生知识点】配套的 % 也按地板规则：-7 % 2 = 1（因为 -4*2+1=-7），所以 Python 中 a % b 的符号跟随除数 b，这与 C 语言不同；math.floor() 与 math.trunc() 的区别也源于此。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "2 ** 10 的值是（　）。",
+   "options": [
+    "20",
+    "100",
+    "1024",
+    "512"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "** 是幂运算符，2**10 = 1024。幂运算符优先级高于单目取负，且满足右结合：2**3**2 = 2**(3**2) = 512。【衍生知识点】pow(2, 10) 等价；pow(2, 10, 1000) 可做模幂（等价 2**10 % 1000），在大数加密运算中常用；math.pow() 总是返回 float。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "下列表达式的值恒为 False 的是（　）。",
+   "options": [
+    "bool(\"0\")",
+    "bool([])",
+    "bool(0.1)",
+    "bool(-1)"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "空容器（[]、{}、set()、\"\"、()）、0、0.0、0j、None 的布尔值为 False；非空字符串 \"0\"、非零数都是 True。【衍生知识点】自定义类可通过 __bool__（或 __len__）控制真假值；if items: 是 if len(items) > 0 的惯用写法。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "a = [1, 2]; b = [1, 2]，则 a == b 与 a is b 的结果分别是（　）。",
+   "options": [
+    "True, True",
+    "True, False",
+    "False, True",
+    "False, False"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "== 比较值相等（调用 __eq__），两个内容相同的列表相等；is 比较对象身份（同一内存地址），a 与 b 是两个不同对象。【衍生知识点】判断 None 惯用 x is None 而非 ==；小整数（-5~256）与短字符串因缓存/驻留会出现 is 为 True 的巧合，不能依赖。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "bin(10) 的返回值是（　）。",
+   "options": [
+    "1010",
+    "0b1010",
+    "10",
+    "'0b1010'"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "bin() 返回二进制字符串，带 0b 前缀。类似地 oct() 返回 0o 前缀八进制、hex() 返回 0x 前缀十六进制。【衍生知识点】反向转换：int('0b1010', 2)、int('0x1a', 16) 或 int('1a', 16)；f-string 格式化可免前缀输出：f\"{10:b}\"、f\"{255:x}\"。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "type(1 + 2j) 的结果是（　）。",
+   "options": [
+    "float",
+    "complex",
+    "str",
+    "dict"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "1+2j 是复数字面量（j 表示虚部），类型为 complex，实部 .real、虚部 .imag，支持 abs()、共轭 .conjugate() 等运算。【衍生知识点】Python 原生支持复数使科学计算方便；cmath 模块提供复数域的三角/指数函数；虚数单位用 j 而非 i，源于工程惯例。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "0.1 + 0.2 == 0.3 的结果是（　）。",
+   "options": [
+    "True",
+    "False",
+    "报错",
+    "视平台而定"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "IEEE 754 二进制浮点无法精确表示 0.1 与 0.2，相加得到 0.30000000000000004，与 0.3 不相等。【衍生知识点】浮点比较应使用 math.isclose(a, b) 或 abs(a-b) < 1e-9；需要精确十进制运算（如金额）用 decimal.Decimal；fractions.Fraction 可做精确分数运算。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "2 ** 3 * 2 的值是（　）。",
+   "options": [
+    "64",
+    "16",
+    "12",
+    "10"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "** 优先级高于 *，先算 2**3=8，再乘 2 得 16。【衍生知识点】常见优先级从高到低：() > ** > 一元 +- > * / // % > + - > 比较 > not > and > or；拿不准时加括号是最稳妥的写法。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "1 < 2 < 3 的求值方式是（　）。",
+   "options": [
+    "(1 < 2) < 3，即 True < 3",
+    "等价于 1 < 2 and 2 < 3",
+    "语法错误",
+    "等价于 1 < (2 < 3)"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 支持链式比较，1 < 2 < 3 会展开为 (1 < 2) and (2 < 3)，中间值 2 只求值一次，结果为 True。【衍生知识点】链式比较可读性高：0 <= x <= 100 是惯用边界判断；注意左侧不会是布尔与数字比较，Python 不把 True 当 1 参与链式比较的第一环。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "下列类型中属于不可变（immutable）类型的是（　）。",
+   "options": [
+    "list",
+    "dict",
+    "tuple",
+    "set"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "tuple、数字（int/float/complex）、字符串 str、frozenset、bytes 是不可变类型；list、dict、set、bytearray 是可变类型。不可变对象可作字典键或集合元素。【衍生知识点】元组本身不可变，但其中的可变元素（如列表）内容仍可修改；frozenset 是 set 的不可变版本；bytes 与 bytearray 的关系同理。"
+  },
+  {
+   "type": "choice",
+   "category": "数据类型与运算符",
+   "question": "x = 10; x += 5 后，对于列表而言下列说法正确的是（　）。",
+   "options": [
+    "lst += [1] 与 lst = lst + [1] 完全等价，都产生新列表",
+    "lst += [1] 是原地扩展（等价 extend），lst = lst + [1] 产生新列表",
+    "两者都是原地修改",
+    "两者都报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "对可变序列，+= 调用 __iadd__ 原地扩展并返回自身；+ 调用 __add__ 创建新列表。因此作为函数默认参数或闭包变量时二者行为可能不同。【衍生知识点】同理 lst.extend([1]) 原地、lst + [1] 新建；对不可变类型（int、str、tuple），+= 等价于先加后重新绑定，二者无差别。"
+  },
+  {
+   "type": "blank",
+   "category": "数据类型与运算符",
+   "question": "9 // 2 的值是________。",
+   "answer": [
+    [
+     "4"
+    ]
+   ],
+   "explanation": "// 地板除向下取整，9/2=4.5 → 4。【衍生知识点】取商和余数可用内置 divmod(9, 2) 一次性返回 (4, 1)，在循环分页等场景很方便。"
+  },
+  {
+   "type": "blank",
+   "category": "数据类型与运算符",
+   "question": "二进制整数字面量的前缀是________（如 0b1010）。",
+   "answer": [
+    [
+     "0b",
+     "0B"
+    ]
+   ],
+   "explanation": "二进制 0b、八进制 0o、十六进制 0x；十进制无前缀。【衍生知识点】不同进制只是整数的书写形式，值相同：0b1010 == 0o12 == 0xA == 10；格式化输出可用 format(n, 'b')。"
+  },
+  {
+   "type": "blank",
+   "category": "数据类型与运算符",
+   "question": "int(\"ff\", 16) 的值是________。",
+   "answer": [
+    [
+     "255"
+    ]
+   ],
+   "explanation": "int(str, base) 按 base 进制解析字符串，ff(十六进制) = 255。【衍生知识点】base 可为 2~36；int(\"0xff\", 16) 也可（带前缀允许）；反向可用 format(255, \"x\") 得 \"ff\"。"
+  },
+  {
+   "type": "blank",
+   "category": "数据类型与运算符",
+   "question": "bool 是________的子类，因此 True + True 的值是 2。",
+   "answer": [
+    [
+     "int",
+     "整数"
+    ]
+   ],
+   "explanation": "bool 继承自 int，True 等于 1、False 等于 0，可参与算术运算。【衍生知识点】统计列表中真值个数可用 sum(map(bool, lst))；isinstance(True, int) 为 True 而 isinstance(1, bool) 为 False。"
+  },
+  {
+   "type": "blank",
+   "category": "数据类型与运算符",
+   "question": "abs(-3.5) 的值是________。",
+   "answer": [
+    [
+     "3.5",
+     "3.5"
+    ]
+   ],
+   "explanation": "abs() 返回绝对值，对 int、float、complex（返回模）都有效。【衍生知识点】round(3.14159, 2) 四舍五入到指定小数位（实际是银行家舍入，round(2.5)=2）；math.ceil/math.floor 分别向上/向下取整。"
+  },
+  {
+   "type": "blank",
+   "category": "数据类型与运算符",
+   "question": "表达式 not True or True 的值是________。",
+   "answer": [
+    [
+     "True"
+    ]
+   ],
+   "explanation": "not 优先级高于 or，先算 not True = False，再算 False or True = True。【衍生知识点】and、or 是短路运算且返回操作数本身：0 or \"x\" 得 \"x\"，\"\" and 1/0 不会报错，这一特性常用于设默认值 name = name or \"guest\"（更推荐写法是 name or \"guest\" 配合明确语义）。"
+  },
+  {
+   "type": "short",
+   "category": "数据类型与运算符",
+   "question": "简述 == 与 is 的区别，并解释为什么 256 is 256 为 True 而 257 is 257 可能为 False（交互式分行输入时）。",
+   "answer": [
+    "== 比较“值”是否相等（调用对象的 __eq__ 方法）；is 比较“身份”，即两个名字是否指向同一个对象（等价于 id(a) == id(b)）。CPython 为提升性能对小整数 [-5, 256] 做了预先缓存，字面量 256 在解释器中引用同一缓存对象，故 is 为 True；而 257 超出缓存范围，两行语句各自创建新 int 对象，id 不同，is 为 False。【衍生知识点】这一缓存属于实现细节（不同实现/编译方式结果可能不同），编程中判断值相等一律用 ==，判断 None/True/False 等单例才用 is；同理还有字符串驻留（interning）机制。"
+   ],
+   "explanation": "== 值比较、is 身份比较；小整数缓存是常见面试考点。"
+  },
+  {
+   "type": "practical",
+   "category": "数据类型与运算符",
+   "question": "编写程序：打印 2 的 1 到 10 次幂，并计算 10 除以 3 的商、余数与精确浮点值（各占一行）。",
+   "answer": [
+    "for i in range(1, 11):\n    print(f\"2**{i} = {2 ** i}\")\nprint(\"商:\", 10 // 3)\nprint(\"余数:\", 10 % 3)\nprint(\"真除法:\", 10 / 3)\n\n输出 2、4、8...1024；商 3、余数 1、真除法 3.3333333333333335。"
+   ],
+   "explanation": "也可用 divmod(10, 3) 同时获得 (3, 1)；浮点结果不精确是 IEEE 754 的正常表现。"
+  }
+ ]
+}

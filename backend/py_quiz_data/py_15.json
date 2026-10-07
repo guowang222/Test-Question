@@ -1,0 +1,269 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "collections.Counter([\"a\", \"b\", \"a\"]) 最常用的方法是（　）。",
+   "options": [
+    "most_common(n) 返回出现最多的前 n 项",
+    "sort()",
+    "append()",
+    "join()"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "Counter 是计数专用 dict 子类，most_common(1) 得 [(元素, 次数)]。【衍生知识点】访问不存在的键返回 0（不插入）；支持 update、+、- 运算；elements() 展开重复元素。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "collections.defaultdict(list) 的行为是（　）。",
+   "options": [
+    "访问缺失键返回空列表并自动写入",
+    "访问缺失键返回 None",
+    "报 KeyError",
+    "只能存列表"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "defaultdict 用工厂函数初始化缺失键，分组/邻接表场景最简洁：d[key].append(v) 无需先判断。【衍生知识点】工厂可为 int（计数）、set（去重分组）；default_factory 可查看 d.default_factory；普通 dict 的等价写法是 setdefault。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "collections.deque 相比 list 的优势是（　）。",
+   "options": [
+    "两端插入删除 O(1)（popleft/appendleft）",
+    "支持随机访问更快",
+    "自动排序",
+    "更省内存读文件"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "deque 双端队列用双向链表块实现，两端操作 O(1)，适合队列/滑动窗口；list.pop(0) 是 O(n)。【衍生知识点】deque(maxlen=n) 自动淘汰旧元素，实现最近 N 条日志/滑动平均；随机访问是 O(n)，频繁下标访问仍用 list。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "datetime 模块中，now() 与 utcnow() 的关系是（　）。",
+   "options": [
+    "相同",
+    "now() 返回本地时间，utcnow() 返回 UTC 时间（naive）；现代写法推荐 now(timezone.utc) 得 aware 时间",
+    "utcnow 更快",
+    "utcnow 已删除"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "datetime.now() 本地、datetime.utcnow() 零时区但无时区信息（naive），容易混淆；aware 写法 datetime.now(timezone.utc)。【衍生知识点】存储/传输一律 UTC aware，展示时 astimezone() 转本地；timestamp() 与 fromtimestamp() 处理 Unix 时间戳；Python 3.12 起 utcnow() 已弃用。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "datetime.strptime(\"2026-09-27\", \"%Y-%m-%d\") 的作用是（　）。",
+   "options": [
+    "格式化输出日期字符串",
+    "按指定格式把字符串解析为 datetime 对象",
+    "计算日期差",
+    "比较日期"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "strptime 解析（p=parse），strftime 格式化输出（f=format）。【衍生知识点】常用码：%Y 年 %m 月 %d 日 %H 时 %M 分 %S 秒；日期加减 timedelta(days=7)；ISO 8601 快捷：fromisoformat/isocalendar。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "os 与 sys 模块中，获取命令行参数列表的是（　）。",
+   "options": [
+    "sys.argv",
+    "os.args",
+    "sys.path",
+    "os.environ"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "sys.argv[0] 是脚本名，其余是参数字符串列表。【衍生知识点】复杂参数用 argparse（类型转换、--help 自动生成）；环境变量 os.environ[\"KEY\"] / os.getenv(\"KEY\", default)；sys.exit(code) 设定退出码。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "random 模块中，从非空序列随机取一个元素的是（　）。",
+   "options": [
+    "random.choice(seq)",
+    "random.sample(seq, 1) 也可以（返回列表）",
+    "random.shuffle(seq)（原地打乱，不返回元素）",
+    "以上都相关，其中 choice 直接返回单个元素"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "choice 返回单元素；sample(seq, k) 无放回取 k 个（返回列表）；shuffle 原地打乱。【衍生知识点】random.random() [0,1)、randint(a,b) 含两端、seed(a) 复现实验；安全用途（令牌/密码）必须用 secrets 模块而非 random。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "time.sleep(0.5) 的作用是（　）。",
+   "options": [
+    "暂停当前线程 0.5 秒",
+    "休眠进程",
+    "清理内存",
+    "定时任务"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "sleep 阻塞当前线程指定秒数（支持小数）；期间不释放 GIL 之外的锁，也不处理其他任务。【衍生知识点】asyncio.sleep(0.5) 才是异步等待（让出事件循环）；重试退避常用指数 sleep；精确计时用 time.perf_counter()。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "math 模块中，向上取整与向下取整分别是（　）。",
+   "options": [
+    "math.ceil / math.floor",
+    "round / int",
+    "abs / sign",
+    "math.up / math.down"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "ceil(2.1)=3、floor(2.9)=2、ceil(-2.1)=-2（向上含更小负方向？不，-2 比 -2.1 大）。【衍生知识点】round 是银行家舍入（round(2.5)=2）；int() 是向零截断 int(-2.9)=-2；三者区别是高频考点。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "functools.lru_cache(maxsize=None) 与 functools.cache 的关系是（　）。",
+   "options": [
+    "完全无关",
+    "functools.cache(3.9+) 就是无限大小的 lru_cache 的别名",
+    "cache 更慢",
+    "lru_cache 已废弃"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "cache == lru_cache(maxsize=None)，即不带淘汰的纯记忆化。【衍生知识点】lru_cache 支持 typed=True 区分 1 与 1.0；查看命中率 cache_info()；缓存方法时注意 self 使每个实例独立缓存（对象需可哈希）。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "subprocess 模块中，安全执行外部命令并获取输出的推荐函数是（　）。",
+   "options": [
+    "subprocess.run([\"ls\", \"-l\"], capture_output=True, text=True)（3.x 推荐）",
+    "os.system（无法获取输出、无异常）",
+    "shell=True 拼接字符串（有注入风险）",
+    "eval"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "run() 返回 CompletedProcess（stdout/stderr/returncode），列表形式参数避免 shell 注入。【衍生知识点】check=True 非零退出码抛 CalledProcessError；需要 shell 特性（管道）时才 shell=True 且必须拼接可信内容；asyncio.create_subprocess_exec 是异步版本。"
+  },
+  {
+   "type": "choice",
+   "category": "常用标准库",
+   "question": "logging 模块日志级别从低到高正确的是（　）。",
+   "options": [
+    "DEBUG < INFO < WARNING < ERROR < CRITICAL",
+    "INFO < DEBUG < ERROR",
+    "ERROR 最高",
+    "WARNING > ERROR"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "默认 root logger 级别 WARNING，低于该级别的 DEBUG/INFO 不输出。【衍生知识点】最佳实践：模块内 logger = logging.getLogger(__name__) 而非直接用 root；配置用 logging.basicConfig 或 dictConfig；结构化日志可用 structlog。"
+  },
+  {
+   "type": "blank",
+   "category": "常用标准库",
+   "question": "按列名读取 CSV 每行为字典，应使用 csv.________ 类。",
+   "answer": [
+    [
+     "DictReader"
+    ]
+   ],
+   "explanation": "csv.DictReader(f) 让 row[\"列名\"] 取值，首行为表头。【衍生知识点】写侧对应 csv.DictWriter(f, fieldnames=...)，需先 writeheader()。"
+  },
+  {
+   "type": "blank",
+   "category": "常用标准库",
+   "question": "生成加密安全随机令牌应使用________模块而不是 random 模块。",
+   "answer": [
+    [
+     "secrets"
+    ]
+   ],
+   "explanation": "random 是伪随机可预测；secrets 基于 OS 熵源，用于密码、令牌、密钥。【衍生知识点】secrets.token_hex(16)/token_urlsafe(16)；密码学需求还有 hashlib（哈希）与 hmac（签名，3.14 内置形式验证实现）。"
+  },
+  {
+   "type": "blank",
+   "category": "常用标准库",
+   "question": "把时间字符串 \"2026-09-27 20:00:00\" 解析为 datetime 用 datetime.________(s, \"%Y-%m-%d %H:%M:%S\")。",
+   "answer": [
+    [
+     "strptime"
+    ]
+   ],
+   "explanation": "strptime 按格式解析字符串；strftime 反向格式化输出。【衍生知识点】标准 ISO 格式免写格式串：datetime.fromisoformat(\"2026-09-27T20:00:00\")。"
+  },
+  {
+   "type": "blank",
+   "category": "常用标准库",
+   "question": "返回对象的可打印表示并用于调试的内置函数是________（与 str 相对）。",
+   "answer": [
+    [
+     "repr"
+    ]
+   ],
+   "explanation": "repr 面向开发者、无歧义；str 面向用户。【衍生知识点】自定义类实现 __repr__ 后调试器与日志立刻可读；f-string {x=} 用的是 repr。"
+  },
+  {
+   "type": "blank",
+   "category": "常用标准库",
+   "question": "itertools.chain([1], [2, 3]) 的结果是依次产出 1, 2, 3，即把多个可迭代对象________成一个。",
+   "answer": [
+    [
+     "连接/串联",
+     "拼接"
+    ]
+   ],
+   "explanation": "chain 惰性串联多个可迭代对象。【衍生知识点】chain.from_iterable(list_of_lists) 接受“可迭代的可迭代”，拍平一层；与之相对，product 是笛卡尔积。"
+  },
+  {
+   "type": "blank",
+   "category": "常用标准库",
+   "question": "计算两个日期相差天数：end - start 得到 timedelta，其属性 ________ 是总天数。",
+   "answer": [
+    [
+     "days"
+    ]
+   ],
+   "explanation": "timedelta 有 days、seconds、microseconds 属性与 total_seconds() 方法。【衍生知识点】days 为负表示 end 早于 start；秒级以下用 total_seconds() 统一。"
+  },
+  {
+   "type": "short",
+   "category": "常用标准库",
+   "question": "说明 collections 模块中 defaultdict、Counter、deque、namedtuple 各自的典型使用场景。",
+   "answer": [
+    "defaultdict(list/int/set)：分组统计、邻接表，缺失键自动初始化，省去判空；Counter：频次统计、TopN（most_common）、多重集合运算；deque：队列/栈、滑动窗口、最近 N 条记录（maxlen），两端 O(1)；namedtuple：轻量不可变记录，带字段名，如 Point = namedtuple(\"Point\", \"x y\")，适合 CSV 行、坐标、配置项。【衍生知识点】3.7+ 还有 dataclass 处理更复杂记录；typing.NamedTuple 在类型检查场景替代 namedtuple；这些容器都是 dict/list/tuple 的特化，理解底层即可举一反三。"
+   ],
+   "explanation": "collections 是最值得熟练的标准库之一。"
+  },
+  {
+   "type": "practical",
+   "category": "常用标准库",
+   "question": "用标准库完成：解析当前时间并输出 \"YYYY-MM-DD HH:MM\"；计算 7 天后的日期；把指定时间戳 1700000000 转为本地 datetime。",
+   "answer": [
+    "from datetime import datetime, timedelta, timezone\n\nnow = datetime.now()\nprint(now.strftime(\"%Y-%m-%d %H:%M\"))\nprint((now + timedelta(days=7)).date())\nprint(datetime.fromtimestamp(1700000000))\nprint(datetime.fromtimestamp(1700000000, tz=timezone.utc))  # UTC 版本\n\nstrftime 格式化、timedelta 偏移、fromtimestamp 时间戳转换。"
+   ],
+   "explanation": "存储时间戳与 UTC、展示用本地时区转换是跨时区应用的惯例。"
+  }
+ ]
+}

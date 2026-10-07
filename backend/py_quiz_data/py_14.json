@@ -1,0 +1,276 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "open(\"f.txt\", \"r\", encoding=\"utf-8\") 中 r 模式的含义是（　）。",
+   "options": [
+    "追加写入",
+    "只读（文件不存在报错）",
+    "读写",
+    "二进制读"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "r 只读文本模式，文件不存在抛 FileNotFoundError；写用 w（截断创建）、a（追加创建）、x（排他创建，已存在报错）。【衍生知识点】加 + 变读写（r+/w+）；加 b 为二进制（rb/wb），此时不能传 encoding；默认模式即 rt。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "with open(\"a.txt\") as f: 的核心作用是（　）。",
+   "options": [
+    "加速读取",
+    "离开 with 块（即使异常）自动关闭文件",
+    "压缩文件",
+    "校验编码"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "文件对象支持上下文管理协议，__exit__ 保证 close() 被调用。【衍生知识点】不关文件的后果：句柄泄漏、数据未落盘（缓冲未刷）；with 可同时开多个文件 with open(a) as fa, open(b) as fb；Python 3.12 起支持括号多行写法。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "读写 JSON 文件的标准库模块是（　）。",
+   "options": [
+    "json（load/dump 处理文件，loads/dumps 处理字符串）",
+    "pickle",
+    "marshal",
+    "csv"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "json.load(fp)/json.dump(obj, fp) 面向文件对象；loads/dumps 面向 str/bytes。【衍生知识点】ensure_ascii=False 保留中文、indent=2 美化、default=xx 序列化自定义类型；pickle 是 Python 专用二进制序列化（能存任意对象但不可跨语言且不可信来源危险）。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "pathlib 模块中，拼接路径的运算符是（　）。",
+   "options": [
+    "+",
+    "/",
+    "&",
+    "."
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Path(\"a\") / \"b\" / \"c.txt\" 跨平台拼接并自动处理分隔符。【衍生知识点】常用成员：exists()、is_dir()、glob(\"*.py\")、read_text(encoding=)、mkdir(parents=True, exist_ok=True)；pathlib 已取代 os.path 字符串拼接（os.path.join 仍有效）。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "读取一个大文件并逐行处理，最省内存的写法是（　）。",
+   "options": [
+    "lines = f.readlines()",
+    "for line in f:（文件对象本身是迭代器）",
+    "data = f.read().split(\"\\n\")",
+    "读入后再切片"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "文件对象按行惰性迭代，内存占用与文件大小无关；readlines/read 一次载入全部。【衍生知识点】行尾含 \\n，配合 line.rstrip(\"\\n\") 处理；超大单行文件可指定 buffering 或用 mmap；CSV 大文件用 csv.reader 迭代同理。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "open(\"log.txt\", \"a\") 的行为是（　）。",
+   "options": [
+    "覆盖已有内容",
+    "追加到文件末尾，文件不存在则创建",
+    "只读",
+    "文件已存在时报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "a 追加模式，写指针总在末尾；x 模式才是“必须新建，存在即报错”，适合防覆盖场景。【衍生知识点】日志轮转常用 a；w 打开瞬间即清空文件（即使不写），要小心。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "二进制复制文件最直接的写法是（　）。",
+   "options": [
+    "shutil.copyfile(src, dst)",
+    "open(src) 读文本后写",
+    "os.rename",
+    "json.dump"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "shutil.copyfile/copy2（保留元数据）按块复制二进制；文本模式复制会破坏图片等非文本文件。【衍生知识点】os.rename/os.replace 移动或改名（replace 跨平台覆盖语义更稳）；shutil.move 可跨文件系统；大文件流式复制 shutil.copyfileobj(src, dst)。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "csv 模块读取 CSV 文件的标准方式是（　）。",
+   "options": [
+    "csv.load(f)",
+    "csv.reader(f) 迭代出行列表，DictReader 可按列名取值",
+    "eval 每行",
+    "json.load"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "with open(...) as f: for row in csv.reader(f): row 是字符串列表；csv.DictReader(f) 的 row[\"列名\"] 更可读。【衍生知识点】写用 csv.writer(f).writerows(data)；中文 Excel 兼容常指定 encoding=\"utf-8-sig\"（带 BOM）；数据分析场景直接 pandas.read_csv 更强。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "StringIO 与 BytesIO 的用途是（　）。",
+   "options": [
+    "压缩字符串",
+    "在内存中模拟文件对象，让需要 file 的接口直接吃字符串/字节",
+    "加密",
+    "读取网络"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "io.StringIO（文本）与 io.BytesIO（二进制）实现内存文件，常用于测试、生成内存中的 zip/图片。【衍生知识点】getvalue() 取全部内容；与临时文件 tempfile.TemporaryFile 的区别是后者真正落盘可承受大数据。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "f.seek(0) 的作用是（　）。",
+   "options": [
+    "关闭文件",
+    "把读写位置移到文件开头",
+    "清空文件",
+    "读取第一行"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "seek(offset, whence) 移动文件指针，whence 0=开头 1=当前 2=末尾；tell() 报告当前位置。【衍生知识点】文本模式下 seek 只允许 tell() 返回的值；二进制模式任意偏移；读一次后想重新读需先 seek(0)。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "open(..., encoding=\"utf-8\") 在 Windows 上特别重要的原因是（　）。",
+   "options": [
+    "Windows 不支持 Python",
+    "不指定时默认编码可能是 GBK/cp936（取决于区域设置），读写 UTF-8 文件会乱码或报错",
+    "UTF-8 更快",
+    "Windows 文件更大"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "locale.getpreferredencoding() 在中文 Windows 历史上返回 cp936，默认编码读写 UTF-8 文件会 UnicodeDecodeError 或乱码；显式传 encoding 是最佳实践。【衍生知识点】PEP 686 计划把默认 UTF-8 模式化（Python 3.15 起 UTF-8 模式默认启用）；临时方案 -X utf8 开关。"
+  },
+  {
+   "type": "choice",
+   "category": "文件与IO",
+   "question": "os.walk(top) 的用途是（　）。",
+   "options": [
+    "遍历目录树，产出 (当前目录, 子目录列表, 文件列表)",
+    "读取文件",
+    "排序",
+    "监控文件变化"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "os.walk 自顶向下递归目录，配合修改 dirnames 可剪枝。【衍生知识点】pathlib 对应 Path.rglob(\"*\")；监控文件变化用 watchdog 第三方库；os.scandir 比.listdir 快（带文件属性缓存）。"
+  },
+  {
+   "type": "blank",
+   "category": "文件与IO",
+   "question": "打开文件使用 with 语句的目的是确保文件在使用结束后自动________。",
+   "answer": [
+    [
+     "关闭",
+     "close"
+    ]
+   ],
+   "explanation": "上下文管理器保证 close() 执行，即使中途抛异常。【衍生知识点】忘记 close 的典型症状是 Windows 下文件被占用无法删除、写内容丢失。"
+  },
+  {
+   "type": "blank",
+   "category": "文件与IO",
+   "question": "以二进制追加模式打开文件的 mode 字符串是________。",
+   "answer": [
+    [
+     "ab"
+    ]
+   ],
+   "explanation": "a 追加 + b 二进制；图片、音频等非文本必须二进制模式。【衍生知识点】文本模式在 Windows 会做 \\n↔\\r\\n 转换（newline 参数可控），二进制不做任何转换。"
+  },
+  {
+   "type": "blank",
+   "category": "文件与IO",
+   "question": "json 模块中，把字典写入文件用 json.________，从文件读出用 json.________。",
+   "answer": [
+    [
+     "dump"
+    ],
+    [
+     "load"
+    ]
+   ],
+   "explanation": "dump/load 面向文件对象，dumps/loads 面向字符串（s=string）。【衍生知识点】写文件惯例：json.dump(d, f, ensure_ascii=False, indent=2)；读取严格 JSON 不允许单引号与注释。"
+  },
+  {
+   "type": "blank",
+   "category": "文件与IO",
+   "question": "pathlib 中表示当前目录的是 Path.________，返回当前工作目录的是 Path.________。",
+   "answer": [
+    [
+     "\".\"，即 Path(\".\")"
+    ],
+    [
+     "cwd()"
+    ]
+   ],
+   "explanation": "Path(\".\") 表示相对当前目录；Path.cwd() 返回绝对路径的工作目录。【衍生知识点】__file__ 是当前模块文件路径，Path(__file__).parent 常用于定位资源文件；脚本的工作目录取决于启动位置而非文件位置。"
+  },
+  {
+   "type": "blank",
+   "category": "文件与IO",
+   "question": "f.readlines() 返回________，而 list(f) 也能得到类似结果（每行含换行符）。",
+   "answer": [
+    [
+     "行字符串组成的列表",
+     "列表"
+    ]
+   ],
+   "explanation": "readlines 一次读全部行到内存。【衍生知识点】内存敏感时用 for line in f 迭代；去除行尾换行 line.rstrip(\"\\n\")。"
+  },
+  {
+   "type": "blank",
+   "category": "文件与IO",
+   "question": "在 CSV 写入时若希望 Excel 正确识别 UTF-8 中文，encoding 常指定为________。",
+   "answer": [
+    [
+     "utf-8-sig"
+    ]
+   ],
+   "explanation": "utf-8-sig 在文件头写入 BOM，Excel 据此识别编码。【衍生知识点】读取带 BOM 文件用 utf-8-sig 可自动剥离 BOM；普通 UTF-8 文件遇到 BOM 会在首字段多出 \\ufeff。"
+  },
+  {
+   "type": "short",
+   "category": "文件与IO",
+   "question": "比较文本模式与二进制模式的区别，并说明分别适用的场景。",
+   "answer": [
+    "文本模式：按 encoding 解码为 str，处理换行符转换（Windows \\r\\n ↔ \\n），支持行迭代、通用换行；适合配置、日志、CSV、源码等人类可读内容。二进制模式（b）：读写字节 bytes，不做解码与换行转换，seek 可任意偏移；适合图片、音视频、pickle/protobuf 数据、网络协议、精确字节处理。【衍生知识点】str.encode()/bytes.decode() 是两界桥梁；文件可以 rb 读入后按需 decode；处理“可能是文本也可能是二进制”的文件（如 HTTP 响应）时先拿 bytes 再判断。"
+   ],
+   "explanation": "文本/二进制的选择取决于是否需要编码语义。"
+  },
+  {
+   "type": "practical",
+   "category": "文件与IO",
+   "question": "编写程序：把字典 [{\"name\": \"张三\", \"score\": 90}, {\"name\": \"李四\", \"score\": 85}] 写入 students.json，再读回打印；用 pathlib 定位当前目录。",
+   "answer": [
+    "import json\nfrom pathlib import Path\n\nstudents = [{\"name\": \"张三\", \"score\": 90}, {\"name\": \"李四\", \"score\": 85}]\npath = Path(\"students.json\")\n\npath.write_text(json.dumps(students, ensure_ascii=False, indent=2), encoding=\"utf-8\")\ndata = json.loads(path.read_text(encoding=\"utf-8\"))\nprint(data[0][\"name\"])  # 张三\n\n中文正常显示需 ensure_ascii=False + encoding=\"utf-8\"；pathlib 的 read_text/write_text 一步完成打开关闭。"
+   ],
+   "explanation": "大文件仍建议 with open + json.load/dump 流式处理。"
+  }
+ ]
+}

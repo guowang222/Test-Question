@@ -1,0 +1,272 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "x = 5，语句 print(\"big\") if x > 3 else print(\"small\") 属于（　）。",
+   "options": [
+    "语法错误",
+    "三元条件表达式",
+    "switch 语句",
+    "循环"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "条件表达式（三元）形式为 A if 条件 else B，本身是表达式，可直接作为值使用：y = \"big\" if x > 3 else \"small\"。【衍生知识点】Python 3.10 起有结构化模式匹配 match...case（PEP 634），可替代复杂 if-elif 链；但 Python 没有 C 的 switch 关键字。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "for i in range(3): print(i, end=\" \") 的输出是（　）。",
+   "options": [
+    "0 1 2",
+    "1 2 3",
+    "0 1 2 3",
+    "1 2"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "range(3) 生成 0、1、2；end=\" \" 把默认换行改为空格。【衍生知识点】for 遍历的是可迭代对象，range 只是其中一种；遍历序列同时要下标用 enumerate(seq, start=1) 比手动维护 i 更 Pythonic。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "关于 break 与 continue，说法正确的是（　）。",
+   "options": [
+    "break 跳过本次循环继续下一轮",
+    "continue 立即终止整个循环",
+    "break 终止本层循环，continue 跳过本次进入下一轮",
+    "两者完全等价"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "break 跳出当前层循环体；continue 跳过本次剩余语句直接进入下一次迭代。【衍生知识点】循环可以带 else：for...else 中 else 在循环未被 break 打断时执行，常用于“查找失败”场景；break 只跳出一层，多层退出可抛异常或封装函数 return。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "for i in [1, 2, 3]: pass 执行后 i 的值是（　）。",
+   "options": [
+    "不存在",
+    "3",
+    "0",
+    "保留上次迭代前的值"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "循环变量在循环结束后保留最后一次的值（3），且作用域是函数/模块级（Python 没有块级作用域）。【衍生知识点】这也是列表推导式在 3.x 中“不泄漏”变量而普通 for 会泄漏的原因；循环后使用 i 前建议确认列表非空。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "while True: ... 循环的正确退出方式不包括（　）。",
+   "options": [
+    "break",
+    "return（在函数内）",
+    "raise 异常",
+    "continue"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "continue 只是跳到下一轮循环，无法结束 while True。break、return、抛异常、sys.exit() 都能退出。【衍生知识点】死循环+break 是事件循环/服务监听的常见结构；为避免忙等应在循环体内 sleep 或阻塞等待 I/O。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "enumerate([\"a\", \"b\"], start=1) 转为列表的结果是（　）。",
+   "options": [
+    "[(0,'a'), (0,'b')]",
+    "[(1,'a'), (2,'b')]",
+    "[1, 2]",
+    "['a','b']"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "enumerate 同时产出索引与元素，start 指定起始编号（只影响显示值，不影响位置）。【衍生知识点】等价于 zip(range(start, start+len(seq)), seq)；enumerate 返回迭代器，list() 后才能重复使用。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "match point: case (0, 0): ... 结构化模式匹配（Python 3.10+）中，case _ 的含义是（　）。",
+   "options": [
+    "匹配任何值（通配）",
+    "匹配空值",
+    "语法错误",
+    "匹配下划线变量"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "case _ 是通配分支，等价于 default，通常放最后兜底。【衍生知识点】match 支持：字面量、捕获变量、序列/映射模式、类模式（如 Point(x=0, y=0)）、或模式 |、守卫 if 条件；它不是简单 switch，捕获变量如 case [x, y] 会绑定值。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "if 语句中哪些值会被视为假？",
+   "options": [
+    "仅 False 和 None",
+    "False、None、0、0.0、空容器、空字符串等",
+    "所有负数",
+    "0 和 False"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "真值测试：False、None、所有数值零（0/0.0/0j）、空字符串、空容器（list/tuple/dict/set）、空 range、自定义对象的 __bool__/__len__ 返回假时均为假，其余为真。【衍生知识点】惯用法 if not lst: 判空；注意 \"False\"（非空字符串）为真，0.0 为假但 -0.0 也是假。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "下列代码的输出是（　）。\nfor i in range(3):\n    if i == 1:\n        continue\n    print(i, end=\"\")",
+   "options": [
+    "02",
+    "012",
+    "2",
+    "0"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "i=1 时 continue 跳过 print，故输出 0 和 2。【衍生知识点】若换成 break，输出只有 0；把条件改到 else 分支更直观：for...else 结构中 else 只在完整跑完时执行。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "pass 语句的作用是（　）。",
+   "options": [
+    "结束程序",
+    "空操作占位",
+    "跳过下一次循环",
+    "返回 None"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "pass 是空语句占位符，保证语法完整性，常用于空函数体、待实现分支。【衍生知识点】类/函数体还可用 ...（Ellipsis）作为占位，类型存根文件（.pyi）惯用 ...；两者运行效果相同，语义上 pass 表“待实现”，... 表“类型存根/省略”。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "for ch in \"abc\": 会迭代出（　）。",
+   "options": [
+    "整个字符串",
+    "每个字符",
+    "报错",
+    "字符的下标"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "字符串是可迭代对象，逐字符迭代。【衍生知识点】迭代字典默认迭代键、文件对象迭代行、zip/enumerate/reversed 等包装迭代；判断对象可迭代：iter(obj) 不抛 TypeError 即可迭代。"
+  },
+  {
+   "type": "choice",
+   "category": "流程控制",
+   "question": "嵌套循环中，内层 break 会（　）。",
+   "options": [
+    "跳出所有循环",
+    "只跳出内层循环",
+    "跳出外层循环",
+    "语法错误"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "break 只作用于所在的那一层循环。【衍生知识点】需要一次跳出多层时，惯用方案：1) 封装成函数用 return；2) 抛出自定义异常；3) 设置标志变量；4) for...else 配合外层判断。Python 没有 labeled break。"
+  },
+  {
+   "type": "blank",
+   "category": "流程控制",
+   "question": "Python 中用于占位、什么都不做的语句是________。",
+   "answer": [
+    [
+     "pass"
+    ]
+   ],
+   "explanation": "pass 空操作，满足语法块要求。【衍生知识点】Ellipsis（...）也能占位；抽象方法惯用 raise NotImplementedError 或 @abstractmethod 装饰 + ...。"
+  },
+  {
+   "type": "blank",
+   "category": "流程控制",
+   "question": "range(5) 生成的整数序列是________到________（含头不含尾）。",
+   "answer": [
+    [
+     "0"
+    ],
+    [
+     "4"
+    ]
+   ],
+   "explanation": "range(5) = 0,1,2,3,4，共 5 个元素。【衍生知识点】range 支持逆序 range(5, 0, -1) 得 5,4,3,2,1（不含 0）；range(0) 为空，循环体不执行。"
+  },
+  {
+   "type": "blank",
+   "category": "流程控制",
+   "question": "遍历列表同时获得下标应使用内置函数________。",
+   "answer": [
+    [
+     "enumerate"
+    ]
+   ],
+   "explanation": "for i, v in enumerate(lst): 同时得到索引与值。【衍生知识点】默认下标从 0 开始，enumerate(lst, 1) 可从 1 开始，适合生成编号清单。"
+  },
+  {
+   "type": "blank",
+   "category": "流程控制",
+   "question": "循环的 else 子句在循环被________打断时不会执行。",
+   "answer": [
+    [
+     "break"
+    ]
+   ],
+   "explanation": "for/while 的 else 在循环正常结束（未被 break）时执行，常用于搜索后“未找到”的提示。【衍生知识点】continue 不影响 else 的执行；try...else 的 else 在无异常时执行，二者语义类似“顺利走完才做”。"
+  },
+  {
+   "type": "blank",
+   "category": "流程控制",
+   "question": "表达式 \"odd\" if x % 2 else \"even\" 中，x=3 时结果为________。",
+   "answer": [
+    [
+     "odd"
+    ]
+   ],
+   "explanation": "x % 2 = 1 为真，取 if 前面的值。注意这里用余数直接作条件：偶数余 0 为假，奇数余 1 为真。【衍生知识点】三元表达式可以嵌套但建议不超过一层，复杂分支用字典映射或 match 提升可读性。"
+  },
+  {
+   "type": "blank",
+   "category": "流程控制",
+   "question": "match 语句是 Python________（填版本）引入的语法。",
+   "answer": [
+    [
+     "3.10",
+     "3.10+"
+    ]
+   ],
+   "explanation": "PEP 634 结构化模式匹配在 3.10 落地，match/case 为软关键字。【衍生知识点】在旧版本写 match: 会被当作普通变量名/表达式而不报语法错（case 行除外），迁移代码时要注意兼容性判断。"
+  },
+  {
+   "type": "short",
+   "category": "流程控制",
+   "question": "说明 for...else 语法的作用并给出一个典型使用场景。",
+   "answer": [
+    "for...else 中，else 块在循环正常迭代完毕（没有被 break 中断）时执行。典型场景是“搜索”：在列表中查找目标，找到即 break，循环走完说明没找到，else 分支处理未找到逻辑。例如：\nfor item in items:\n    if item == target:\n        print(\"找到\")\n        break\nelse:\n    print(\"未找到\")\n【衍生知识点】while...else 同理；else 的语义可理解为“没有 break 时执行”（有教程戏称其为 nobreak）；该语法能避免额外的 found 标志变量。"
+   ],
+   "explanation": "for...else 消除标志变量，是 Python 特色语法。"
+  },
+  {
+   "type": "practical",
+   "category": "流程控制",
+   "question": "用 while 循环实现：不断让用户输入数字，输入空行结束，最后打印所有数字的平均值（保留两位小数）；若一个数都没输入则打印 N/A。",
+   "answer": [
+    "nums = []\nwhile True:\n    s = input(\"数字(回车结束): \").strip()\n    if not s:\n        break\n    nums.append(float(s))\nif nums:\n    print(f\"平均: {sum(nums)/len(nums):.2f}\")\nelse:\n    print(\"N/A\")\n\n输入 1、2、3 回车结束得 平均: 2.00；直接回车得 N/A。"
+   ],
+   "explanation": "while True + break 是交互输入的标准模式；f-string 的 :.2f 控制小数位。"
+  }
+ ]
+}

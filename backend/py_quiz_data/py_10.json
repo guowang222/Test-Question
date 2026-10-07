@@ -1,0 +1,276 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "实例方法中的 self 指的是（　）。",
+   "options": [
+    "类本身",
+    "当前实例对象",
+    "模块",
+    "父类"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "obj.method() 等价于 Class.method(obj)，self 就是第一个位置参数，名字可以改但不建议。【衍生知识点】实例方法、类方法（cls 指向类）、静态方法（无隐式参数）三者通过调用方式自动绑定；self 是显式的，这是 Python 的设计哲学“Explicit is better than implicit”。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "__init__ 方法的作用是（　）。",
+   "options": [
+    "创建对象",
+    "初始化刚创建的实例（设置属性）",
+    "销毁对象",
+    "复制对象"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "实例由 __new__ 创建（分配内存），随后 __init__ 接收同一实例做属性初始化，返回值必须是 None。【衍生知识点】__new__ 才负责“出生”（单例模式、不可变类型子类必须重写它）；__del__ 在对象被垃圾回收时调用，但时机不确定，资源清理应使用 with/context manager。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "class A: pass; a = A(); a.x = 1; a.y = 2，说法正确的是（　）。",
+   "options": [
+    "语法错误",
+    "可以动态给实例添加属性，属性存在 a.__dict__ 中",
+    "属性必须先在类中声明",
+    "x、y 属于类而不是实例"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 对象属性动态可加，存储在实例的 __dict__；未定义 __slots__ 时都可以。【衍生知识点】__slots__ = (\"x\",) 可禁止动态属性并省内存（属性由描述符管理，无 __dict__）；类属性在类 __dict__ 中，查找顺序：实例 __dict__ → 类 → 父类（MRO）。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "class Dog:\n    count = 0\n    def __init__(self):\n        Dog.count += 1\n关于 count，说法正确的是（　）。",
+   "options": [
+    "count 是实例属性",
+    "count 是类属性，被所有实例共享，此处用于统计实例数",
+    "count 每个实例独立",
+    "会报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "定义在类体、方法外的 count 是类属性，通过 Dog.count 读写共享；注意 self.count += 1 会创建同名实例属性遮蔽类属性。【衍生知识点】类属性适合常量、计数、注册表；写类属性尽量用类名而非 self，避免“读类写实例”的坑。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "调用 obj.method() 时，Python 的查找与调用过程是（　）。",
+   "options": [
+    "先找实例 __dict__ 中的数据属性，找不到才报错",
+    "先在类型（含 MRO）中找到 method，再以 obj 为第一参数调用",
+    "直接执行全局函数",
+    "编译期绑定"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "属性查找沿 MRO 在类中找函数对象，命中后经描述符协议绑定成绑定方法（bound method），self 自动传入。【衍生知识点】函数即描述符：访问 obj.method 产生绑定方法对象，它记录了 obj；这也是能将 method 取出来之后仍知道 self 的原因；数据属性优先于方法名查找。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "下列创建实例的方式正确的是（　）。",
+   "options": [
+    "p = Point",
+    "p = Point()",
+    "p = new Point()",
+    "p = Point.create"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "类对象加调用运算符 () 即实例化（触发 __call__ → __new__ + __init__），没有 new 关键字。【衍生知识点】Point（不加括号）是类本身；工厂函数、单例、缓存实例等模式可通过重写 __new__ 或类方法 from_xxx 实现。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "@classmethod 方法的特点是（　）。",
+   "options": [
+    "不能访问任何属性",
+    "第一个参数是类 cls，常用于替代构造器（如 dict.fromkeys）",
+    "等同于静态方法",
+    "只能被类调用不能被实例调用"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "类方法第一个参数绑定类本身，实例也能调用（cls 为实例的类）；典型用途是备选构造器。【衍生知识点】classmethod 的重要优势是继承友好：cls 是实际调用的子类，from_xxx 会构造出子类实例；staticmethod 则完全没有隐式参数，只是命名空间归属。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "@staticmethod 与普通模块级函数相比的主要意义是（　）。",
+   "options": [
+    "性能更好",
+    "逻辑上归属类命名空间，表明它不依赖实例或类状态",
+    "可以访问 self",
+    "必须这样写"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "staticmethod 不接收 self/cls，与类内普通函数无差别，作用是组织代码与表达“这属于该类”。【衍生知识点】多数场景直接写模块级函数更简单；子类继承 staticmethod 不接收 cls，无法像 classmethod 那样感知子类，这是选型关键。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "print(obj) 时调用的魔术方法是（　）。",
+   "options": [
+    "__str__（优先），无 __str__ 时回退 __repr__",
+    "__init__",
+    "__len__",
+    "__call__"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "print/str() 找 __str__，没有则用 __repr__；repr()/交互式回显只用 __repr__。【衍生知识点】惯例：__repr__ 面向开发者（无歧义、最好能求值重建），__str__ 面向用户（可读）；只定义一个时定义 __repr__；f-string 中 {!r}/{!s} 或 {obj=} 分别触发 repr/str。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "实现 obj1 == obj2 的自定义比较需要重写（　）。",
+   "options": [
+    "__eq__",
+    "__cmp__",
+    "__equals__",
+    "is 方法"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "== 调用 __eq__（默认按身份比较）；配套的还有 __ne__、__lt__ 等（可用 @functools.total_ordering 自动补全排序族）。【衍生知识点】重写 __eq__ 后默认 __hash__ 变为 None（对象不可放入 set/dict），需同时定义 __hash__；dataclass(eq=True) 会自动生成两者。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "len(obj) 需要 obj 实现（　）。",
+   "options": [
+    "__len__",
+    "__size__",
+    "__count__",
+    "__length__"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "len() 调用 __len__ 并要求返回非负整数，同时使对象支持真值测试与 bool 转换。【衍生知识点】实现 __len__ + __getitem__ 的对象自动可迭代、可切片（旧式协议）；现代做法直接实现 __iter__；容器协议还包括 __contains__（in 运算）。"
+  },
+  {
+   "type": "choice",
+   "category": "面向对象基础",
+   "question": "下列关于命名约定（非强制）正确的是（　）。",
+   "options": [
+    "_name 表示受保护的内部属性（惯例提示）",
+    "__name（双下划线开头）触发名称改写（name mangling）变为 _类名__name",
+    "__name__ 是系统魔术命名",
+    "以上都正确"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "单下划线是“内部使用”约定；双下划线开头在类体中会被改写为 _ClassName__name 以避免子类冲突；双下划线前后都有的 __xxx__ 是魔术方法命名空间。【衍生知识点】名称改写不是真私有（_Cls__x 仍可访问），Python 信任程序员；“私有”需求可用 property 只读封装。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象基础",
+   "question": "实例方法的第一个参数按惯例命名为________。",
+   "answer": [
+    [
+     "self"
+    ]
+   ],
+   "explanation": "self 代表调用该方法的实例，由解释器自动传入。【衍生知识点】类方法第一参数为 cls；self/cls 只是惯例名（技术上可改名），但代码审查会视为错误。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象基础",
+   "question": "实例化类时，先调用________分配并返回实例，再调用________初始化。",
+   "answer": [
+    [
+     "__new__"
+    ],
+    [
+     "__init__"
+    ]
+   ],
+   "explanation": "__new__(cls, ...) 创建并返回对象；__init__(self, ...) 对该对象设置属性。【衍生知识点】__init__ 必须返回 None，返回非 None 抛 TypeError；重写 __new__ 时记得调用 super().__new__(cls)。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象基础",
+   "question": "查看实例所有属性（含方法）可访问其________属性（字典）。",
+   "answer": [
+    [
+     "__dict__",
+     "__dict__ 属性"
+    ]
+   ],
+   "explanation": "实例属性存于 obj.__dict__；类属性存于 Class.__dict__（是 mappingproxy 只读视图）。【衍生知识点】使用 __slots__ 的类没有实例 __dict__；vars(obj) 是 obj.__dict__ 的内置函数别名。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象基础",
+   "question": "让对象支持 with 语句需要实现________和________方法（上下文管理协议）。",
+   "answer": [
+    [
+     "__enter__"
+    ],
+    [
+     "__exit__"
+    ]
+   ],
+   "explanation": "with obj as x: 调用 __enter__ 取 as 的值，无论是否异常都调用 __exit__ 做清理。【衍生知识点】更简洁的写法用 contextlib.contextmanager 装饰生成器；Python 3.12 起 with 支持括号分组多个上下文管理器。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象基础",
+   "question": "Python 私有属性的双下划线改写规则：__secret 在类 Foo 中实际存储为________。",
+   "answer": [
+    [
+     "_Foo__secret",
+     "_Foo__secret 属性"
+    ]
+   ],
+   "explanation": "name mangling 把 __name 改写为 _类名__name，避免子类无意覆盖。【衍生知识点】改写只发生在类体内代码；仍是“君子协定”，外部可直接 obj._Foo__secret 访问；单下划线前缀不改名。"
+  },
+  {
+   "type": "blank",
+   "category": "面向对象基础",
+   "question": "isinstance(True, int) 的结果是________，体现了子类与父类的 isinstance 关系。",
+   "answer": [
+    [
+     "True"
+    ]
+   ],
+   "explanation": "bool 继承自 int，True 是 int 的实例。【衍生知识点】isinstance 接受元组 isinstance(x, (int, float))；type() 不认子类；鸭子类型优先，仅必要时才 isinstance。"
+  },
+  {
+   "type": "short",
+   "category": "面向对象基础",
+   "question": "比较实例方法、类方法、静态方法的定义与适用场景。",
+   "answer": [
+    "实例方法：def m(self)，第一个参数是实例，读写实例状态，最常用。类方法：@classmethod + def m(cls)，第一个参数是类，不依赖具体实例，典型场景是备选构造器（如 pd.DataFrame.from_dict、dict.fromkeys）与操作类级状态；继承时 cls 指向实际子类，工厂方法自动适配子类。静态方法：@staticmethod + def m()，无隐式参数，是放在类命名空间里的普通函数，表达“与类相关但不依赖状态”。【衍生知识点】实例方法可通过类调用 Class.method(obj)；staticmethod 在子类中不会感知子类，需要子类感知的工厂一律 classmethod。"
+   ],
+   "explanation": "三种方法是面向对象基础必考点：self/cls/无。"
+  },
+  {
+   "type": "practical",
+   "category": "面向对象基础",
+   "question": "定义类 BankAccount：初始化余额 balance（默认 0），方法 deposit(amount)（负数抛 ValueError）、withdraw(amount)（余额不足抛 ValueError）、__str__ 显示账户余额；并演示存入 100、取出 30、打印。",
+   "answer": [
+    "class BankAccount:\n    def __init__(self, balance=0):\n        self.balance = balance\n\n    def deposit(self, amount):\n        if amount <= 0:\n            raise ValueError(\"金额必须为正\")\n        self.balance += amount\n\n    def withdraw(self, amount):\n        if amount > self.balance:\n            raise ValueError(\"余额不足\")\n        self.balance -= amount\n\n    def __str__(self):\n        return f\"BankAccount(balance={self.balance})\"\n\nacc = BankAccount()\nacc.deposit(100)\nacc.withdraw(30)\nprint(acc)  # BankAccount(balance=70)\n\n输出 BankAccount(balance=70)；用 property 可进一步把 balance 变为只读。"
+   ],
+   "explanation": "金额类建议用 decimal.Decimal 避免浮点误差；余额校验也可放在 property setter 中。"
+  }
+ ]
+}

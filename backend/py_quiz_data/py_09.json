@@ -1,0 +1,274 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "可迭代对象（Iterable）与迭代器（Iterator）的关系是（　）。",
+   "options": [
+    "完全相同",
+    "可迭代对象实现了 __iter__，迭代器还实现了 __next__；iter() 可把可迭代对象转为迭代器",
+    "迭代器不能迭代",
+    "可迭代对象只能用一次"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Iterable 有 __iter__ 方法；Iterator 在此之上还有 __next__，逐个产出元素并在耗尽时抛 StopIteration。for 循环先 iter() 再不断 next()。【衍生知识点】list/tuple/str/dict/range 都是 Iterable 而非 Iterator；生成器、map/filter/zip 的返回值是 Iterator；isinstance(x, collections.abc.Iterable/Iterator) 可验证。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "生成器函数的标志是（　）。",
+   "options": [
+    "函数名以 gen_ 开头",
+    "函数体内含 yield 关键字",
+    "返回 list",
+    "使用 @generator 装饰器"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "函数体中只要出现 yield，该函数就是生成器函数：调用它不执行函数体，而是返回生成器对象，每次 next() 执行到下一个 yield 处暂停。【衍生知识点】生成器是惰性的、一次性的；yield 的函数返回注解是 Generator[YieldType, SendType, ReturnType]；生成器也是迭代器协议的快捷实现方式。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "g = (x*x for x in range(3))，list(list(g)) 的结果是（　）。",
+   "options": [
+    "[[0, 1, 4]]",
+    "[0, 1, 4]",
+    "[]",
+    "报错"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "生成器表达式是迭代器，第一次 list(g) 已耗尽，第二次得空列表。【衍生知识点】这是生成器“一次性”的典型坑；需要复用就先转 list；切片也不支持（无长度），需要长度信息时先 list()。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "yield 的执行语义是（　）。",
+   "options": [
+    "结束函数并返回值，类似 return",
+    "暂停函数并交出一个值，下次 next() 从暂停处继续",
+    "只能用一次",
+    "必须配对使用"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "yield 暂停并保存全部局部状态（变量、执行位置），恢复执行时从断点继续，可实现协程与流式处理。【衍生知识点】value = yield x 的双向通道：send(v) 把 v 作为 yield 表达式的值；生成器结束前的清理用 close() 抛 GeneratorExit；PEP 380 的 yield from 委托子生成器。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "处理 10GB 日志文件统计错误行数，最省内存的方式是（　）。",
+   "options": [
+    "f.readlines() 一次读入后遍历",
+    "逐行 for line in f 遍历（文件对象即迭代器）",
+    "f.read() 读入整个字符串再 split",
+    "读入 list 处理"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "文件对象是迭代器，逐行惰性读取，内存占用恒定；readlines/read 会把整个文件载入内存。【衍生知识点】流式思想：生成器管道 gen1 → gen2 → reduce，每级只处理当前元素；itertools 的组合是内存高效处理大数据的标准姿势。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "itertools.count(10, 2) 的行为是（　）。",
+   "options": [
+    "生成 10 到 2 的序列",
+    "无限生成 10, 12, 14, ...",
+    "只生成一次 10",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "count 是无限迭代器，必须配合 islice/takewhile/break 截断。【衍生知识点】itertools 三类：无限（count/cycle/repeat）、组合（product/permutations/combinations）、过滤分组（chain/groupby/islice）；itertools + 生成器是 Python 处理序列的瑞士军刀。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "itertools.groupby([1,1,2,2,3], key=lambda x:x) 分组的前提是（　）。",
+   "options": [
+    "无要求",
+    "数据必须先按 key 排序，相同 key 相邻",
+    "数据必须是数字",
+    "数据必须去重"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "groupby 只对相邻的相同 key 分组，通常先 sorted(data, key=...) 再 groupby。【衍生知识点】groupby 产出 (key, group_iterator)；group 迭代器与主迭代器共享状态，需立即消费（list(g)）；不用排序的全量分组用 dict + defaultdict。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "自定义迭代器类必须实现的方法是（　）。",
+   "options": [
+    "__iter__ 和 __next__",
+    "__getitem__ 和 __setitem__",
+    "__len__ 和 __str__",
+    "run() 和 stop()"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "__iter__ 返回自身，__next__ 返回下一个值或抛 StopIteration。【衍生知识点】只实现 __getitem__ 的旧式序列也可被 for 迭代（向后兼容），但不是正式迭代器；生成器函数比手写迭代器类简洁得多，优先用生成器。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "生成器表达式与列表推导式的写法区别是（　）。",
+   "options": [
+    "[] 与 {}",
+    "[...] 与 (...)，圆括号版本是惰性生成器",
+    "完全一样",
+    "(...) 是元组"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "[expr for ...] 立即构建完整列表；(expr for ...) 创建生成器，元素按需产出。【衍生知识点】作为函数唯一参数时生成器表达式可省略括号：sum(x*x for x in nums)；大量数据下生成器内存 O(1)，列表 O(n)。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "iter([1, 2]).__next__() 等价于（　）。",
+   "options": [
+    "next([1, 2])",
+    "next(iter([1, 2]))",
+    "[1,2].next()",
+    "直接调用报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "内置 next(iterator) 调用其 __next__；list 本身没有 __next__，必须先 iter()。【衍生知识点】next(it, default) 可在耗尽时返回默认值而非抛 StopIteration，如 next(iter([]), None) 得 None。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "关于生成器的 send 方法，g.send(v) 的作用是（　）。",
+   "options": [
+    "向生成器外部发送数据",
+    "把 v 作为生成器内部当前 yield 表达式的值并恢复执行",
+    "只能发送 None",
+    "等价于 next()"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "send 恢复执行时，暂停处的 yield 表达式整体取值 v，实现调用方→生成器的数据流；首次必须先 next() 或 send(None) 启动。【衍生知识点】yield 双向通道是旧式协程（@coroutine、asyncio 早期）的基础；现代异步编程已用 async/await，但理解 send 有助于看懂底层。"
+  },
+  {
+   "type": "choice",
+   "category": "迭代器与生成器",
+   "question": "sum(x for x in range(10) if x % 2) 的结果是（　）。",
+   "options": [
+    "25",
+    "20",
+    "45",
+    "30"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "取 1,3,5,7,9（奇数），和为 25；生成器表达式作为唯一参数可省一层括号。【衍生知识点】等价 sum(range(1, 10, 2))；range 直接支持步长时优先用 range，更省一次过滤。"
+  },
+  {
+   "type": "blank",
+   "category": "迭代器与生成器",
+   "question": "迭代器耗尽后继续 next() 会抛出________异常。",
+   "answer": [
+    [
+     "StopIteration"
+    ]
+   ],
+   "explanation": "迭代协议规定耗尽时抛 StopIteration，for 循环据此安静结束。【衍生知识点】在生成器内部 StopIteration 会被转为 RuntimeError（PEP 479）；next(it, default) 可避免异常。"
+  },
+  {
+   "type": "blank",
+   "category": "迭代器与生成器",
+   "question": "定义生成器函数使用关键字________；委托另一个生成器使用________。",
+   "answer": [
+    [
+     "yield"
+    ],
+    [
+     "yield from"
+    ]
+   ],
+   "explanation": "yield 定义生成器；yield from iterable（PEP 380）委托子生成器并透传 send/throw。【衍生知识点】yield from 是 async/await 的前身；委托还自动返回子生成器的返回值（StopIteration.value）。"
+  },
+  {
+   "type": "blank",
+   "category": "迭代器与生成器",
+   "question": "list(zip(\"ab\", range(10))) 的结果是________。",
+   "answer": [
+    [
+     "[('a', 0), ('b', 1)]",
+     "[('a',0), ('b',1)]"
+    ]
+   ],
+   "explanation": "zip 以最短者为准，字符串 'ab' 只有两个字符。【衍生知识点】zip 结果也是迭代器（3.x 惰性）；zip(*pairs) 反向解包两列；strict=True（3.10+）可发现长度不一致的 bug。"
+  },
+  {
+   "type": "blank",
+   "category": "迭代器与生成器",
+   "question": "从无限迭代器 itertools.count() 中取前 5 个值应使用 itertools.________。",
+   "answer": [
+    [
+     "islice"
+    ]
+   ],
+   "explanation": "islice(it, 5) 等价于对迭代器做切片（只能从头开始，不支持负索引）。【衍生知识点】islice(it, 2, 8, 2) 支持 start/stop/step；对无限流截断是 count/cycle/repeat 的标配。"
+  },
+  {
+   "type": "blank",
+   "category": "迭代器与生成器",
+   "question": "表达式 next(iter(\"abc\")) 的值是________。",
+   "answer": [
+    [
+     "a",
+     "'a'"
+    ]
+   ],
+   "explanation": "iter(\"abc\") 得字符串迭代器，next 取第一个字符 a。【衍生知识点】字符串迭代按字符；文件按行；dict 默认按键；自定义容器实现 __iter__ 返回生成器即可支持 for。"
+  },
+  {
+   "type": "blank",
+   "category": "迭代器与生成器",
+   "question": "生成器函数中 return x 的效果是把 x 放入________异常的 value 中（对调用方表现为结束）。",
+   "answer": [
+    [
+     "StopIteration",
+     "StopIteration.value"
+    ]
+   ],
+   "explanation": "生成器 return 会让 StopIteration.value = x，用 yield from 委托时可取到该返回值。【衍生知识点】for 循环忽略返回值；需要取回值时应手动 next 循环捕获 StopIteration 或在 yield from 外层获取。"
+  },
+  {
+   "type": "short",
+   "category": "迭代器与生成器",
+   "question": "解释生成器为什么省内存，并说明什么场景下应避免使用生成器。",
+   "answer": [
+    "生成器惰性求值：不存储全部元素，只保存当前执行状态（程序计数位置+局部变量），任意时刻内存中只有一个元素，处理大数据流时内存 O(1)。应避免的场景：1) 需要多次遍历同一份数据（生成器一次性，耗尽后为空）；2) 需要长度、索引、切片等序列操作；3) 数据量很小（省不了内存反而增加间接性）；4) 需要随机的数据结构操作（如反复求 len、in 判断时 set/list 更合适）。【衍生知识点】管道组合（读文件→过滤→变换→聚合）是生成器的最佳实践；itertools.tee 可把一个迭代器“分叉”为多个，但会缓存差异部分。"
+   ],
+   "explanation": "惰性 + 单元素驻留内存是生成器的本质优势。"
+  },
+  {
+   "type": "practical",
+   "category": "迭代器与生成器",
+   "question": "编写生成器 fib() 无限产出斐波那契数列（1,1,2,3,5,...），配合 itertools.islice 打印前 10 项。",
+   "answer": [
+    "from itertools import islice\n\ndef fib():\n    a, b = 1, 1\n    while True:\n        yield a\n        a, b = b, a + b\n\nprint(list(islice(fib(), 10)))\n# [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]\n\n无限生成器 + islice 截断是标准组合；生成器内部用 while True 是合法的，因为每次 yield 都会暂停。"
+   ],
+   "explanation": "该生成器可继续取任意前 n 项：islice(fib(), n)。"
+  }
+ ]
+}

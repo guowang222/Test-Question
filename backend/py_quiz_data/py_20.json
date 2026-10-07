@@ -1,0 +1,278 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "is 并用于判断两个值相等的问题在于（　）。",
+   "options": [
+    "is 是身份比较，内容相等的不同对象会误判为 False",
+    "is 更慢",
+    "is 只能用于字符串",
+    "没有问题"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "is 比较对象身份，仅适合 None/True/False 等单例；值比较一律 ==。【衍生知识点】PEP 8 明确写：与 None 比较必须 is None / is not None；isinstance 替代 type(x) == int。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "可变对象作字典键或集合元素会出问题的根本原因是（　）。",
+   "options": [
+    "可变对象内容变化后哈希值可能变化，破坏哈希表一致性",
+    "速度慢",
+    "字典不允许任何对象",
+    "内存不足"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "哈希表依赖“键的哈希在生命周期内不变”；list 无 __hash__ 直接 TypeError，自定义可变类即使能哈希，修改后也检索不到。【衍生知识点】这就是“可哈希 ⇒（应）不可变”的原因；dataclass(eq=True) 默认 unsafe_hash=False 正是防止这种不一致。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "for i in range(3): lst.append(i) 中 lst = [] 应放在循环外，若误放循环内结果是（　）。",
+   "options": [
+    "[0, 1, 2]",
+    "每轮清空，最终 [2]",
+    "报错",
+    "[]"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "循环内 lst = [] 每轮重新绑定新列表，append 后下轮被丢弃，只留最后一轮的 [2]。【衍生知识点】初始化变量放循环外是基本准则；类似错误还有在循环内重复 open 文件、重复建数据库连接。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "读文件时 for line in f: print(line) 每行末尾多一个空行的原因是（　）。",
+   "options": [
+    "print 额外加空格",
+    "行本身含 \\n，print 又加换行",
+    "文件编码问题",
+    "readline 的 bug"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "文件行保留行尾 \\n，print 默认 end=\"\\n\"，双重换行；解决：print(line, end=\"\") 或 line.rstrip()。【衍生知识点】用 line.rstrip(\"\\n\") 比 strip() 更精确（不误删行首尾有意义空白）。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "除零、键缺失、类型错误混在一起时，防御式写法的原则是（　）。",
+   "options": [
+    "一个大 except Exception 全包",
+    "分别捕获具体异常类型，各做相应处理",
+    "不处理",
+    "只用 if 判断"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "窄捕获让不同错误有不同恢复策略，也避免吞掉未知 bug。【衍生知识点】多层结构：底层抛具体异常 → 中层翻译为业务异常（raise ... from）→ 顶层统一日志与兜底；这是可维护错误处理的骨架。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "print(type(None)) 的结果是（　）。",
+   "options": [
+    "<class 'NoneType'>",
+    "<class 'None'>",
+    "NoneType 变量",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "None 是 NoneType 的唯一实例（单例）。【衍生知识点】判断 None 用 is None；函数没有返回值时默认返回 None，打印函数调用结果出现 None 是漏写 return 的信号。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "关于 Python 的浮点数下标运算：lst = [10, 20, 30]; lst[1.0] 的结果是（　）。",
+   "options": [
+    "20",
+    "10",
+    "TypeError: list indices must be integers or slices, not float",
+    "30"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "序列下标必须是整数或切片，浮点数直接 TypeError（即便 1.0 数值上等于 1）。【衍生知识点】numpy 数组允许浮点索引是特例；需要转换时 int(1.0) 或用 round。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "代码 d = {\"a\": 1}; for k in d: d[\"b\"] = 2 的结果是（　）。",
+   "options": [
+    "正常",
+    "RuntimeError: dictionary changed size during iteration",
+    "KeyError",
+    "静默成功添加"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "迭代字典时增删键会改变大小，触发 RuntimeError。【衍生知识点】安全写法：先 list(d) 拷贝键再迭代，或构建新字典 {**d, \"b\": 2}；删除同理 d.pop 需在遍历副本时进行。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "字符串数字相加 \"1\" + 1 抛 TypeError，正确的处理思路是（　）。",
+   "options": [
+    "禁止用户输入",
+    "明确边界：输入层尽早转换为 int/float（带校验），核心逻辑只处理强类型数据",
+    "全部用字符串运算",
+    "加 try 忽略"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 是强类型，不会隐式转换；在系统边界（input、API、CSV）统一校验转换，内部保持类型一致。【衍生知识点】pydantic/attrs 在边界做类型强制；字符串数字排序前必须转数字，否则 \"10\" < \"9\"。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "关于切片越界：lst = [1, 2, 3]，lst[5:] 与 lst[5] 的行为分别是（　）。",
+   "options": [
+    "都报错",
+    "切片得 []，下标访问抛 IndexError",
+    "切片报错，下标得 None",
+    "都返回 None"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "切片按范围截断宽容处理，单下标必须有效。【衍生知识点】利用切片宽容性可写 lst[:10000] 取“最多这么多”；而下标访问前的越界检查可改成 if i < len(lst)。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "str 与 bytes 混用：b\"abc\" + \"def\" 的结果是（　）。",
+   "options": [
+    "b\"abcdef\"",
+    "TypeError: can't concat str to bytes",
+    "\"abcdef\"",
+    "报 warning 但成功"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "str（Unicode 文本）与 bytes（原始字节）是两种类型，必须显式 encode/decode 转换。【衍生知识点】s.encode(\"utf-8\")、b.decode(\"utf-8\")；网络与文件 I/O 边界都是 bytes，进入业务层尽早 decode。"
+  },
+  {
+   "type": "choice",
+   "category": "综合应用与常见坑",
+   "question": "判断列表为空最 Pythonic 的写法是（　）。",
+   "options": [
+    "if len(lst) == 0:",
+    "if lst == []:",
+    "if not lst:",
+    "if lst is None:"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "空列表为假值，if not lst: 简洁且不会把 None 误判为“非空列表”以外的问题。【衍生知识点】区分 None 与空列表时两者都要判：if lst is not None and lst:；PEP 8 推荐对序列/字典等容器直接用真值测试。"
+  },
+  {
+   "type": "blank",
+   "category": "综合应用与常见坑",
+   "question": "判断对象是否为 None 的正确写法是 x ________ None（填运算符）。",
+   "answer": [
+    [
+     "is",
+     "is not（否定时）"
+    ]
+   ],
+   "explanation": "None 是单例，用 is 身份比较；== 可能被自定义 __eq__ 干扰。【衍生知识点】PEP 8 明确要求；同样 True/False 也用 is（或直接 if x:）。"
+  },
+  {
+   "type": "blank",
+   "category": "综合应用与常见坑",
+   "question": "遍历字典同时修改（增删键）会抛________异常，安全做法是遍历 ________(d) 的副本。",
+   "answer": [
+    [
+     "RuntimeError"
+    ],
+    [
+     "list"
+    ]
+   ],
+   "explanation": "list(d) 拷贝键列表，对原字典的修改不再影响遍历。【衍生知识点】Python 3.8 前后行为一致；值可以在迭代时修改（不改变键集合），但为清晰起见也建议避免。"
+  },
+  {
+   "type": "blank",
+   "category": "综合应用与常见坑",
+   "question": "字符串数字比较 \"10\" < \"9\" 的结果是________（True/False），因为按________比较。",
+   "answer": [
+    [
+     "True"
+    ],
+    [
+     "字符（码点/字典序）"
+    ]
+   ],
+   "explanation": "字符串比较逐字符按 Unicode 码点，\"1\"(49) < \"9\"(57)，因此 \"10\" < \"9\" 为 True。【衍生知识点】数字排序必须先转 int/float；版本号比较用 tuple(map(int, v.split(\".\")))。"
+  },
+  {
+   "type": "blank",
+   "category": "综合应用与常见坑",
+   "question": "str 与 bytes 互转：s.encode(\"utf-8\") 得到________，b.decode(\"utf-8\") 得到________。",
+   "answer": [
+    [
+     "bytes"
+    ],
+    [
+     "str"
+    ]
+   ],
+   "explanation": "encode 文本→字节，decode 字节→文本。【衍生知识点】解码用错编码会 UnicodeDecodeError 或乱码（ mojibake ）；不确定编码时 chardet/charset-normalizer 可探测。"
+  },
+  {
+   "type": "blank",
+   "category": "综合应用与常见坑",
+   "question": "浮点数相等判断应使用 math.________(a, b) 而不是 ==。",
+   "answer": [
+    [
+     "isclose"
+    ]
+   ],
+   "explanation": "isclose 默认相对容差 1e-09，处理二进制浮点误差。【衍生知识点】金额计算用 decimal.Decimal(\"0.1\")；分数用 fractions.Fraction。"
+  },
+  {
+   "type": "blank",
+   "category": "综合应用与常见坑",
+   "question": "函数参数传可变对象（如 list）时函数内的修改会影响调用方，这种现象称为________传递（按对象引用传值）。",
+   "answer": [
+    [
+     "按对象引用/共享传参（call by object reference）"
+    ]
+   ],
+   "explanation": "传的是对象引用的副本：重新绑定参数不影响外部，但修改可变对象内容会影响外部。【衍生知识点】因此文档应注明函数是否有副作用；防御式做法在入口 copy 或 deepcopy。"
+  },
+  {
+   "type": "short",
+   "category": "综合应用与常见坑",
+   "question": "总结 Python 初学者最常见的 5 个坑及规避方法。",
+   "answer": [
+    "1) 可变默认参数：def f(x=[]) 共享状态 → 用 None 哨兵；2) 浅拷贝共享嵌套对象：b = a.copy() 改内层互相影响 → copy.deepcopy；3) is 误用于值比较（整数缓存巧合）→ 值用 ==、None 用 is；4) 迭代字典时增删键 RuntimeError → 遍历 list(d) 副本；5) 浮点误差 0.1+0.2 != 0.3 → math.isclose / Decimal。【衍生知识点】静态工具可提前暴露多数坑：mypy（类型）、ruff/flake8（风格与错误模式）、bandit（安全）；写单元测试（pytest）是把坑变成回归用例的最终手段。"
+   ],
+   "explanation": "坑的本质都是“引用语义 + 可变性”，理解模型即可举一反三。"
+  },
+  {
+   "type": "practical",
+   "category": "综合应用与常见坑",
+   "question": "编写程序找出并修复下面代码的 3 个 bug：\ndef average(nums=[]):\n    total = 0\n    for n in nums:\n        total = total + n\n    return total / len(nums)\nprint(average([1, 2, 3]))\nprint(average())",
+   "answer": [
+    "修复后：\ndef average(nums=None):\n    if not nums:\n        return 0.0          # 修复 bug3：空列表除零（ZeroDivisionError）\n    return sum(nums) / len(nums)\n\nprint(average([1, 2, 3]))  # 2.0\nprint(average())           # 0.0\n\n三个 bug：1) 可变默认参数 [] 应改为 None 哨兵；2) 手动累加循环可简化为 sum（非 bug 但属优化）；3) 空列表时 len=0 除零崩溃，需前置判断。"
+   ],
+   "explanation": "代码审查三问：默认值可变吗？边界输入安全吗？有没有内置函数替代手写循环？"
+  }
+ ]
+}

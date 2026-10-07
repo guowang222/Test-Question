@@ -1,0 +1,275 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "CPython 的主要内存回收机制是（　）。",
+   "options": [
+    "引用计数为主 + 分代 GC 处理循环引用",
+    "只有标记清除",
+    "手动 free",
+    "不回收"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "对象引用计数归零立即释放；循环引用（互相引用的容器对象）由分代垃圾收集器定期扫描处理。【衍生知识点】gc 模块可手动 gc.collect()、gc.disable()；Python 3.14 引入增量式 GC 降低停顿；引用计数的优势是实时性与可预测性。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "a = [1, [2, 3]]; b = a.copy(); b[1].append(4) 后 a 是（　）。",
+   "options": [
+    "[1, [2, 3]]",
+    "[1, [2, 3, 4]]",
+    "报错",
+    "[1]"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "copy() 是浅拷贝：外层列表是新的，但内层 [2,3] 仍是同一对象的引用，append 反映到两边。【衍生知识点】深拷贝 import copy; copy.deepcopy(a) 递归复制所有层级；浅拷贝方式：lst.copy()、lst[:]、list(lst)、copy.copy()。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "x = 500; y = 500（同一行赋值）与分两行在交互模式输入，x is y 的结果分别是（　）。",
+   "options": [
+    "都 True",
+    "都 False",
+    "同一行 True（编译器常量折叠共享），分两行 False（超出小整数缓存）",
+    "视操作系统"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "超出 [-5,256] 缓存的整数按普通对象创建；同一代码块中的相同字面量会被编译器共享。【衍生知识点】这是实现细节，绝不能在业务中依赖；比较数值永远用 ==。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "函数 def f(x=[]): x.append(1) 连续调用 f() 两次后返回的列表（若返回 x）是（　）。",
+   "options": [
+    "[1] 每次都是新列表",
+    "[1, 1] 共享同一个默认列表",
+    "[1, 1] 但来自不同列表",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "默认值在 def 时求值一次，两次调用操作同一列表。【衍生知识点】危险默认可变值 + 浅拷贝共享是 Python 两大经典坑，都源于“名字绑定对象”的语义。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "del x 与 x = None 的共同点是（　）。",
+   "options": [
+    "都会立即调用 __del__",
+    "都移除名字与对象的绑定，引用计数减一；对象何时销毁取决于引用计数是否归零",
+    "del 会销毁对象",
+    "没有共同点"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "del 删除名字（变量本身），不直接销毁对象；引用计数归零对象才回收。【衍生知识点】对象可能被多处引用（闭包、全局、异常栈帧），只 del 一处不会回收；__del__（终结器）时机不确定，应避免依赖。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "关于 __slots__ 对内存的影响，说法正确的是（　）。",
+   "options": [
+    "让实例更大",
+    "用固定槽位替代每实例 __dict__，大规模小对象显著省内存",
+    "没有影响",
+    "会自动深拷贝"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "普通实例属性存 __dict__（哈希表，开销大）；__slots__ 按槽位存储，百万实例可省 40%+ 内存。【衍生知识点】dataclass(slots=True) 一键启用；代价是失去动态属性与部分多继承兼容。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "生成器与列表在内存上的根本差异是（　）。",
+   "options": [
+    "生成器更快",
+    "生成器只保存当前状态，O(1) 内存；列表持有全部元素 O(n)",
+    "生成器不能循环",
+    "没有差异"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "生成器惰性产出、一次性消费，适合大数据流；列表支持随机访问与重复遍历。【衍生知识点】sys.getsizeof([i for i in range(100)]) 远大于生成器对象；需要既省内存又多次遍历时考虑生成器 + 物化策略。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "intern（驻留）机制主要作用于（　）。",
+   "options": [
+    "所有整数",
+    "符合标识符样式的短字符串，编译期/运行期共享同一对象",
+    "所有列表",
+    "字典"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "看似标识符的字符串（字母数字下划线）会被驻留复用，如 \"hello\" is \"hello\" 为 True；带空格等符号的则不一定。【衍生知识点】sys.intern(s) 可强制驻留高频重复字符串（如大量相同标签）优化内存与比较速度；同样是实现细节。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "copy.copy 与 copy.deepcopy 对只含不可变元素（如 (1, 2, \"a\")）的对象，行为是（　）。",
+   "options": [
+    "deepcopy 一定会新建对象",
+    "两者都可能返回原对象（不可变对象无需复制，直接共享）",
+    "copy.copy 总是新建",
+    "都报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "拷贝不可变对象没有意义，实现上直接返回原对象（优化）。【衍生知识点】deepcopy 用 memo 字典处理循环引用，保证共享结构拷贝后仍共享、不无限递归。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "list.sort 与 sorted 中 key 函数使用 __class__ 属性比较（ attrgetter('__class__') ）时，涉及对象方法（　）。",
+   "options": [
+    "每元素调用一次",
+    "每次比较调用两次",
+    "不调用",
+    "随机"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "key 策略把每元素映射一次后缓存（decorate-sort-undecorate），比较只用映射值。【衍生知识点】这是 key 比 Python 2 的 cmp（每次比较两次调用）更高效的原因。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "weakref（弱引用）的作用是（　）。",
+   "options": [
+    "创建不增加引用计数的引用，不妨碍对象被回收",
+    "加密对象",
+    "永久保活对象",
+    "复制对象"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "weakref.ref(obj) 不增加强引用，对象回收后取值返回 None；缓存、观察者、大对象注册表用它避免泄漏。【衍生知识点】weakref.WeakValueDictionary/WeakKeyDictionary 常用于对象缓存；不是所有类型可弱引用（list/dict 需子类化）。"
+  },
+  {
+   "type": "choice",
+   "category": "内存管理与深浅拷贝",
+   "question": "b = a[:] 与 b = list(a)（a 为嵌套列表）都是（　）。",
+   "options": [
+    "深拷贝",
+    "浅拷贝",
+    "引用赋值",
+    "无效语法"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "二者都创建新外层列表但共享内层元素；嵌套结构需 deepcopy。【衍生知识点】 numpy 的 .copy() 类似概念；pandas 的 copy-on-write（2.0+）专门解决这类共享引发的问题。"
+  },
+  {
+   "type": "blank",
+   "category": "内存管理与深浅拷贝",
+   "question": "查看对象引用计数的函数是 sys.________（CPython 特有）。",
+   "answer": [
+    [
+     "getrefcount"
+    ]
+   ],
+   "explanation": "getrefcount(x) 返回值比真实多 1（传参本身临时引用）。【衍生知识点】weakref.getweakrefcount 统计弱引用；gc.get_referrers 可反向找引用者（调试泄漏利器）。"
+  },
+  {
+   "type": "blank",
+   "category": "内存管理与深浅拷贝",
+   "question": "递归深拷贝使用模块 copy 的________函数。",
+   "answer": [
+    [
+     "deepcopy"
+    ]
+   ],
+   "explanation": "copy.deepcopy 递归复制全部层级并处理循环引用。【衍生知识点】自定义拷贝行为可实现 __copy__/__deepcopy__（memo 参数要透传）。"
+  },
+  {
+   "type": "blank",
+   "category": "内存管理与深浅拷贝",
+   "question": "浅拷贝列表的两种等价写法：lst.copy() 与 lst[________]。",
+   "answer": [
+    [
+     ":"
+    ]
+   ],
+   "explanation": "lst[:] 全切片创建浅拷贝，同为 O(n)。【衍生知识点】tuple 没有 copy 方法，t[:] 即可；字符串不可变无需拷贝。"
+  },
+  {
+   "type": "blank",
+   "category": "内存管理与深浅拷贝",
+   "question": "处理循环引用的垃圾收集器按对象“存活时间”分为________代，新建对象在第 0 代。",
+   "answer": [
+    [
+     "3",
+     "三"
+    ]
+   ],
+   "explanation": "分代假设：越年轻越早死；0 代扫描最频繁，存活者晋升下一代，降低整体开销。【衍生知识点】gc.get_threshold() 返回 (700, 10, 10) 触发阈值；手动 gc.collect(generation) 可指定代。"
+  },
+  {
+   "type": "blank",
+   "category": "内存管理与深浅拷贝",
+   "question": "小整数缓存的默认范围是________到________。",
+   "answer": [
+    [
+     "-5"
+    ],
+    [
+     "256"
+    ]
+   ],
+   "explanation": "CPython 预建 [-5, 256] 的 int 对象池。【衍生知识点】这也是 x is y 面试题的出处；不同解释器（PyPy 等）范围不同。"
+  },
+  {
+   "type": "blank",
+   "category": "内存管理与深浅拷贝",
+   "question": "默认参数可变值的正确规避写法：def f(x, lst=________): 然后 lst = ________ if lst is None else lst。",
+   "answer": [
+    [
+     "None"
+    ],
+    [
+     "[]"
+    ]
+   ],
+   "explanation": "哨兵 None 判断后新建列表，避免共享。【衍生知识点】需要区分“没传”和“传了 None”时可用哨兵对象 _MISSING = object()。"
+  },
+  {
+   "type": "short",
+   "category": "内存管理与深浅拷贝",
+   "question": "解释“变量是名字绑定”与“赋值即引用”模型，并说明它如何同时解释默认参数陷阱与浅拷贝问题。",
+   "answer": [
+    "Python 变量是对象的“名字标签”，赋值 a = b 只复制引用不复制对象；对象分可变/不可变。默认参数陷阱：def 執行时求值 []，该列表对象被函数对象长期持有，所有调用通过同一名字绑定共享同一可变对象。浅拷贝问题：copy() 复制的是“名字列表”（第一层引用），内层元素仍是同一对象的别名，修改内层可见。两者本质相同：共享的是对象引用，可变对象被共享修改就会串味。【衍生知识点】对策统一：默认值用 None 哨兵；需要隔离用 copy.deepcopy；数据传递边界（跨函数/线程）优先不可变类型（tuple、frozen dataclass）。"
+   ],
+   "explanation": "引用模型是贯穿 Python 内存语义的一条主线。"
+  },
+  {
+   "type": "practical",
+   "category": "内存管理与深浅拷贝",
+   "question": "演示浅拷贝与深拷贝差异：nested = [1, [2, 3]]，分别做 shallow = nested.copy() 与 deep = copy.deepcopy(nested)，修改内层列表后打印三者。",
+   "answer": [
+    "import copy\nnested = [1, [2, 3]]\nshallow = nested.copy()\ndeep = copy.deepcopy(nested)\nnested[1].append(99)\nprint(nested)   # [1, [2, 3, 99]]\nprint(shallow)  # [1, [2, 3, 99]]  内层共享\nprint(deep)     # [1, [2, 3]]      完全独立\n\n浅拷贝跟着变，深拷贝不受影响。"
+   ],
+   "explanation": "修改外层元素（nested[0]=x）则三种互不影响，因为浅拷贝的外层本来就是新列表。"
+  }
+ ]
+}

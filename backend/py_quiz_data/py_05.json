@@ -1,0 +1,277 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "d = {\"a\": 1}，访问不存在的键 d[\"b\"] 与 d.get(\"b\") 的结果分别是（　）。",
+   "options": [
+    "都返回 None",
+    "都抛 KeyError",
+    "抛 KeyError 与返回 None",
+    "都返回 0"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "下标访问缺失键抛 KeyError；get() 默认返回 None，可指定默认值 d.get(\"b\", 0)。【衍生知识点】get 适合“可有可无”的读取；setdefault(k, default) 则在缺失时写入默认值并返回；Python 3 的 collections.defaultdict(list) 可自动初始化，分组统计时最简洁。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "下列哪种类型不能作为字典的键？",
+   "options": [
+    "字符串",
+    "元组 (1, 2)",
+    "列表 [1, 2]、frozenset",
+    "整数"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "字典的键必须可哈希（hashable）。列表与 set、dict 都不可哈希；字符串、数字、元组（含不可变元素）均可。【衍生知识点】frozenset 是可哈希的集合版本，可作键；自定义类的实例默认按 id 哈希，重写 __hash__ 与 __eq__ 可自定义键语义。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "Python 3.7+ 中字典的遍历顺序是（　）。",
+   "options": [
+    "随机顺序",
+    "按插入顺序",
+    "按键排序",
+    "倒序"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "从 3.7 起（3.6 为实现细节）字典保持插入顺序，这是语言规范的一部分。【衍生知识点】需要“按访问顺序淘汰”的缓存语义可用 collections.OrderedDict 的 move_to_end；字典保持顺序是靠紧凑哈希表实现，也因此比 3.5 之前更省内存。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "d = {\"a\": 1, \"b\": 2}，d.update({\"b\": 3, \"c\": 4}) 后 d 是（　）。",
+   "options": [
+    "{\"a\":1,\"b\":2,\"c\":4}",
+    "{\"a\":1,\"b\":3,\"c\":4}",
+    "{\"b\":3,\"c\":4}",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "update 用新字典更新：存在的键覆盖值（b→3），不存在的键新增（c）。【衍生知识点】合并字典的惯用法：{**d1, **d2}（后者覆盖前者）或 Python 3.9+ 的 d1 | d2（|= 原地更新）。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "{x: x**2 for x in range(4)} 的结果是（　）。",
+   "options": [
+    "[0, 1, 4, 9]",
+    "{0: 0, 1: 1, 2: 4, 3: 9}",
+    "{0, 1, 4, 9}",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "这是字典推导式，生成键为 x、值为 x² 的字典。【衍生知识点】集合推导式写作 {x**2 for x in range(4)} 得 {0,1,4,9}（无序去重）；推导式统一语法：表达式 for 变量 in 可迭代 if 条件。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "for k, v in d.items() 中，items() 返回的是（　）。",
+   "options": [
+    "[(k,v), ...] 列表",
+    "动态视图对象（view），实时反映字典变化",
+    "元组",
+    "迭代器只能遍历一次"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "items()/keys()/values() 返回视图对象（view），与原字典联动且支持 len、in；遍历时可多次迭代（视图可迭代且非一次性）。【衍生知识点】Python 2 的 items() 返回快照列表，大数据量改用 iteritems（Python 3 中 items 本身高效）；需要快照时用 list(d.items())。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "s1 = {1, 2, 3}; s2 = {2, 3, 4}，s1 & s2、s1 | s2、s1 - s2 分别是（　）。",
+   "options": [
+    "{2,3} / {1,2,3,4} / {1}",
+    "{1} / {1,2,3,4} / {2,3}",
+    "{2,3} / {1,2,3,4} / {4}",
+    "{1,2,3} / {2,3} / {1}"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "& 交集、| 并集、- 差集（属于 s1 不属于 s2），另有 ^ 对称差（{1,4}）。【衍生知识点】运算符版本要求两侧都是集合，方法版本 s1.intersection(任意可迭代) 更通用；子集判断 s1 <= s2 或 s1.issubset(s2)。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "判断元素 x 是否在集合 s 中，s 中查找的时间复杂度是（　）。",
+   "options": [
+    "O(1) 平均",
+    "O(n)",
+    "O(log n)",
+    "O(n log n)"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "集合与字典基于哈希表实现，成员判断平均 O(1)（最坏退化 O(n)），这正是去重与查找首选 set 的原因。【衍生知识点】in 对 list 是 O(n)；大规模数据去重 set(lst) 远快于循环 if x not in res；哈希表以空间换时间。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "lst = [1, 2, 2, 3, 3, 3]，去重且不要求保序的最快写法是（　）。",
+   "options": [
+    "set(lst)",
+    "dict.fromkeys(lst)",
+    "循环判断 not in",
+    "sorted(set(lst))"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "set(lst) 直接去重为 {1,2,3}，O(n)。dict.fromkeys(lst) 也能去重且保持插入顺序（3.7+），list(dict.fromkeys(lst)) 是保序去重惯用法。【衍生知识点】保序去重也可用 OrderedDict；sorted(set(lst)) 会改变为排序结果；set 会破坏原顺序。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "d = {1: \"a\"}; d[[2]] = \"b\" 的结果是（　）。",
+   "options": [
+    "成功添加",
+    "TypeError: unhashable type",
+    "KeyError",
+    "静默失败"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "列表不可哈希，作为键会抛 TypeError: unhashable type: 'list'，在赋值时即校验。【衍生知识点】需要复合键可转成元组 d[(1, 2)]，或用 frozenset 表示无序组合键。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "{}.fromkeys([\"a\", \"b\"], 0) 与 {k: 0 for k in [\"a\", \"b\"]} 的结果（　）。",
+   "options": [
+    "前者报错",
+    "都是 {\"a\":0, \"b\":0}",
+    "前者是 None",
+    "结果类型不同"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "dict.fromkeys(seq, value) 用统一默认值建字典，等价于该字典推导。【衍生知识点】fromkeys 的坑：默认值若为可变对象（如 []），所有键共享同一对象，append 会相互影响——这种情况必须用 defaultdict(list) 或推导式。"
+  },
+  {
+   "type": "choice",
+   "category": "字典与集合",
+   "question": "d = {\"a\": 1}，del d[\"a\"] 与 d.pop(\"a\") 的区别是（　）。",
+   "options": [
+    "无区别",
+    "pop 会返回被删除的值，del 不返回；两者对缺失键均抛 KeyError（pop 无默认值时）",
+    "del 返回 None，pop 返回字典",
+    "del 对缺失键不报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "pop(key) 删除并返回对应值，可带默认值 pop(k, None) 避免异常；del 语句只删除不返回，键不存在抛 KeyError。【衍生知识点】d.popitem() 移除并返回最后插入的键值对（3.7+）；清空用 d.clear()；浅复制 d.copy()。"
+  },
+  {
+   "type": "blank",
+   "category": "字典与集合",
+   "question": "len({1, 2, 2, 3, 3, 3}) 的值是________。",
+   "answer": [
+    [
+     "3"
+    ]
+   ],
+   "explanation": "集合自动去重，只剩 {1, 2, 3}。【衍生知识点】去重计数在数据分析中极常用：len(set(lst))；列表去重保序：list(dict.fromkeys(lst))。"
+  },
+  {
+   "type": "blank",
+   "category": "字典与集合",
+   "question": "d = {\"a\": 1, \"b\": 2}，list(d.keys()) 与 list(d.values()) 分别是________和________。",
+   "answer": [
+    [
+     "['a', 'b']",
+     "['a','b']"
+    ],
+    [
+     "[1, 2]"
+    ]
+   ],
+   "explanation": "keys()/values() 返回视图，list() 转为列表。【衍生知识点】同时拿键值用 list(d.items())；解包遍历 for k, v in d.items() 是最常见字典遍历写法。"
+  },
+  {
+   "type": "blank",
+   "category": "字典与集合",
+   "question": "{1, 2, 3} 中创建空集合必须用________，因为 {} 创建的是空字典。",
+   "answer": [
+    [
+     "set()"
+    ]
+   ],
+   "explanation": "{} 是空字典字面量，空集合只能 set()。【衍生知识点】同样地，空 frozenset 是 frozenset()；判断是否为空用 if not s: 而非 len(s) == 0。"
+  },
+  {
+   "type": "blank",
+   "category": "字典与集合",
+   "question": "d.get(\"x\", 5) 当 \"x\" 不在字典中时返回________，且________（会/不会）修改字典。",
+   "answer": [
+    [
+     "5"
+    ],
+    [
+     "不会"
+    ]
+   ],
+   "explanation": "get 只读取，缺失时返回默认值，不影响字典内容。【衍生知识点】希望“缺失时写入”要用 setdefault(\"x\", 5) 或 defaultdict；这是 get 与 setdefault 的本质区别。"
+  },
+  {
+   "type": "blank",
+   "category": "字典与集合",
+   "question": "合并两个字典的运算符是________（Python 3.9+），如 {\"a\":1} | {\"b\":2}。",
+   "answer": [
+    [
+     "|",
+     "管道符"
+    ]
+   ],
+   "explanation": "PEP 584 引入字典合并运算符 | 与原地更新 |=。【衍生知识点】旧写法 {**d1, **d2} 依然常用；冲突时右侧覆盖左侧。"
+  },
+  {
+   "type": "blank",
+   "category": "字典与集合",
+   "question": "s = {1, 2, 3}，向集合添加元素的方法是________（方法名）。",
+   "answer": [
+    [
+     "add",
+     "s.add"
+    ]
+   ],
+   "explanation": "s.add(x) 添加单个元素；update(it) 合并多个。【衍生知识点】set 没有 append（那是列表的）；删除用 remove（不存在抛异常）、discard（不存在静默）或 pop（随机弹出一个）。"
+  },
+  {
+   "type": "short",
+   "category": "字典与集合",
+   "question": "分别说明 dict 与 set 的底层实现及各自适用的典型场景。",
+   "answer": [
+    "两者都基于哈希表：键/元素经 hash() 定位桶，平均 O(1) 完成插入、删除与查找，最坏（大量冲突）退化 O(n)。dict 存储键值对，保持插入顺序（3.7+），适合映射关系、计数、缓存、JSON 数据；set 只存元素，适合去重、成员判断（in）、集合运算（交并差）。选择原则：需要“值”用 dict，只需“存在性”用 set；小数据量差别不大，大数据量 set/dict 的 O(1) 查找远胜 list 的 O(n)。【衍生知识点】哈希表要求键可哈希且 __eq__ 一致：定义 __hash__ 的类通常同时定义 __eq__；自定义不可变值对象（如 dataclass(frozen=True)）自动获得基于字段的哈希。"
+   ],
+   "explanation": "哈希表是 dict/set 的共同底座；面试常考 O(1) 与可哈希。"
+  },
+  {
+   "type": "practical",
+   "category": "字典与集合",
+   "question": "统计字符串 \"apple banana apple cherry banana apple\" 中每个单词出现次数，输出次数最多的单词及其次数（用普通 dict 与 collections.Counter 各实现一次）。",
+   "answer": [
+    "text = \"apple banana apple cherry banana apple\"\nwords = text.split()\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(counts)  # {'apple': 3, 'banana': 2, 'cherry': 1}\n\nfrom collections import Counter\nc = Counter(words)\nprint(c.most_common(1))  # [('apple', 3)]\n\n两种方式均得 apple 出现 3 次。"
+   ],
+   "explanation": "Counter 还支持 c + c2、c - c2 等多重集合运算；most_common(n) 直接取 TopN。"
+  }
+ ]
+}

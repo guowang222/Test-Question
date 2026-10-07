@@ -1,0 +1,273 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "下列关于闭包的说法正确的是（　）。",
+   "options": [
+    "内层函数引用了外层函数的变量，外层函数返回内层函数后变量仍被保留",
+    "闭包必须使用 global",
+    "闭包只能在模块顶层创建",
+    "闭包在函数调用结束后立即释放外层变量"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "闭包 = 内层函数 + 它引用的外层作用域变量；返回的内层函数携带对这些变量的引用（cell 对象），因此外层函数结束后变量依然存活。【衍生知识点】查看闭包变量：func.__closure__ 与 cell.cell_contents；闭包是有状态函数的轻量实现（如计数器），比类更简洁；修改外层变量必须 nonlocal。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "counter 闭包实现中，为什么需要 nonlocal？",
+   "options": [
+    "不需要",
+    "因为对 n 赋值会让 Python 把 n 判定为局部变量，触发 UnboundLocalError",
+    "nonlocal 能提高性能",
+    "nonlocal 使 n 变为全局变量"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "函数内只要对名字赋值，编译期就把该名字标记为局部；读取外层 n 后再 n += 1 会报 UnboundLocalError，nonlocal n 声明使其绑定到外层作用域。【衍生知识点】用可变容器（n = [0]; n[0] += 1）可绕过，但不推荐；global 只作用于模块层，nonlocal 找的是最近的 Enclosing 层。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "装饰器 @deco 本质上等价于（　）。",
+   "options": [
+    "deco 被导入",
+    "func = deco(func)",
+    "func.deco()",
+    "import deco"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "@deco 语法糖在 def 之后执行 func = deco(func)，用包装后的函数替换原名字。【衍生知识点】装饰器可以叠加（自下而上应用）、带参数（三层嵌套工厂）；functools.wraps 用于保留被装饰函数的 __name__/__doc__，否则文档与调试信息会指向 wrapper。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "def deco(f):\n    def wrapper(*a, **kw):\n        print(\"before\")\n        r = f(*a, **kw)\n        print(\"after\")\n        return r\n    return wrapper\n@deco\ndef hello(): print(\"hello\")\nhello() 的输出顺序是（　）。",
+   "options": [
+    "hello before after",
+    "before hello after",
+    "after before hello",
+    "before after hello"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "wrapper 先打印 before，调用原函数打印 hello，再打印 after。【衍生知识点】这个“三明治”结构可扩展为计时器（time.perf_counter 包裹）、重试器、权限校验；异步函数要用 async def wrapper + await。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "functools.cache（或 lru_cache）装饰递归斐波那契函数的作用是（　）。",
+   "options": [
+    "把递归改为循环",
+    "缓存返回值，把指数复杂度降为线性",
+    "防止栈溢出",
+    "没有作用"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "相同参数直接命中缓存返回，fib(n) 从 O(2^n) 降到 O(n)。【衍生知识点】functools.cache 是 3.9+ 的无限缓存；lru_cache(maxsize=128) 有淘汰策略且线程安全；参数必须可哈希，传 list 会报 TypeError。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "list(map(lambda x: x*2, [1, 2, 3])) 的结果是（　）。",
+   "options": [
+    "[1, 2, 3]",
+    "[2, 4, 6]",
+    "(2, 4, 6)",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "map 把函数逐个应用到可迭代对象上返回惰性 map 对象，list() 后得 [2,4,6]。【衍生知识点】map/filter 在 3 中返回迭代器（一次遍历）；等价推导式 [x*2 for x in lst] 通常更 Pythonic；多个序列可 map(f, xs, ys) 逐元素配对传入。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "from functools import reduce; reduce(lambda a, b: a+b, [1, 2, 3, 4]) 的结果是（　）。",
+   "options": [
+    "10",
+    "1234",
+    "[1,2,3,4]",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "reduce 累积折叠：((((1+2)+3)+4)=10，可选第三参数为初始值。【衍生知识点】reduce 在 Python 3 中移出内置、放入 functools（Guido 认为其可读性差）；求和用 sum、拼接用 join、乘积用 math.prod 更清晰。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "关于带参数的装饰器 @retry(times=3)，其结构是（　）。",
+   "options": [
+    "两层函数",
+    "三层函数：装饰器工厂→真正的装饰器→wrapper",
+    "一个类",
+    "无法实现"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "retry(times=3) 先调用外层工厂返回真正的装饰器，再由它包装函数，共三层嵌套。【衍生知识点】识别技巧：装饰器名后面带括号调用就多一层；也可用类实现装饰器（实现 __call__）提高可读性；标准库 contextlib.decorator 简化写法。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "partial(func, b=10)（functools.partial）的作用是（　）。",
+   "options": [
+    "调用一半就停止",
+    "固定函数的部分参数生成新可调用对象",
+    "并行执行",
+    "删除函数参数"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "partial 冻结部分位置/关键字参数，常用于给回调/映射函数预填参数，如 map(partial(power, exp=2), nums)。【衍生知识点】partial 对象可再 partial；与 lambda 类似但更明确、可 repr、可 pickle；methodcaller/attrgetter/itemgetter 是相关工具。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "下列代码输出（　）。\ndef outer():\n    fs = []\n    for i in range(3):\n        fs.append(lambda: i)\n    return fs\nprint([f() for f in outer()])",
+   "options": [
+    "[0, 1, 2]",
+    "[2, 2, 2]",
+    "[3, 3, 3]",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "lambda 闭包捕获的是变量 i 本身而非当时的值；循环结束后 i=2，三个 lambda 调用时都读同一个 i，得 [2,2,2]。【衍生知识点】解决：lambda i=i: i（默认参数在定义时求值绑定）或用 functools.partial；这是闭包“晚绑定”的经典面试题。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "关于装饰器 functools.wraps，作用是（　）。",
+   "options": [
+    "加速装饰器",
+    "把原函数的 __name__、__doc__、__wrapped__ 等元信息复制到 wrapper",
+    "防止重复装饰",
+    "自动传参"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "不加 wraps 时 wrapper.__name__ 是 \"wrapper\"，影响日志、文档与调试；@functools.wraps(f) 复制元数据并设置 __wrapped__ 便于 inspect 获取原签名。【衍生知识点】API 测试断言被装饰函数名时经常因漏写 wraps 而失败；装饰器库：typing.final、contextlib.contextmanager、dataclasses 等都遵循此惯例。"
+  },
+  {
+   "type": "choice",
+   "category": "函数高级特性",
+   "question": "高阶函数（higher-order function）的定义是（　）。",
+   "options": [
+    "执行时间长的函数",
+    "接受函数为参数或返回函数的函数",
+    "用 class 定义的函数",
+    "带很多参数的函数"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "函数是一等公民，能接收/返回函数的就是高阶函数，如 map、sorted(key=)、装饰器工厂。【衍生知识点】高阶函数是函数式编程的核心，Python 提供 map/filter/reduce/functools 系列；与生成器组合可实现惰性数据处理管道。"
+  },
+  {
+   "type": "blank",
+   "category": "函数高级特性",
+   "question": "内层函数修改外层函数的变量必须使用________关键字。",
+   "answer": [
+    [
+     "nonlocal"
+    ]
+   ],
+   "explanation": "nonlocal 声明名字属于最近的 Enclosing 作用域，使赋值生效。【衍生知识点】Python 2 没有 nonlocal，用可变容器模拟；nonlocal 不能作用于全局变量（那要 global）。"
+  },
+  {
+   "type": "blank",
+   "category": "函数高级特性",
+   "question": "装饰器 @functools.wraps(func) 应加在________函数定义的上一行。",
+   "answer": [
+    [
+     "wrapper"
+    ]
+   ],
+   "explanation": "wraps 修饰 wrapper，把被包装函数的元数据复制过来。【衍生知识点】不加会导致 wrapper.__name__ == \"wrapper\"；调试器与日志显示错误函数名；__wrapped__ 属性还允许 inspect.signature 穿透装饰器。"
+  },
+  {
+   "type": "blank",
+   "category": "函数高级特性",
+   "question": "map(str, [1, 2, 3]) 返回的是惰性的________对象（填类型名），list() 后才生成结果。",
+   "answer": [
+    [
+     "map",
+     "迭代器"
+    ]
+   ],
+   "explanation": "map/filter/zip/enumerate 都返回迭代器，一次遍历耗尽。【衍生知识点】需要多次遍历要先 list() 落盘；惰性求值节省内存，适合大数据流管道。"
+  },
+  {
+   "type": "blank",
+   "category": "函数高级特性",
+   "question": "sorted(words, key=str.lower) 中参数 key 的作用是________。",
+   "answer": [
+    [
+     "指定排序依据（先对每个元素应用 key 函数再比较）"
+    ]
+   ],
+   "explanation": "key 函数把元素映射为可比较的值，排序按映射结果进行，原元素不变。【衍生知识点】key 比 Python 2 的 cmp 参数更高效（每元素调用一次而非每次比较）；operator.itemgetter/attrgetter 是常用 key。"
+  },
+  {
+   "type": "blank",
+   "category": "函数高级特性",
+   "question": "@deco1 与 @deco2 叠加时（deco1 在上），等价于 func = ________(________(func))。",
+   "answer": [
+    [
+     "deco1"
+    ],
+    [
+     "deco2"
+    ]
+   ],
+   "explanation": "装饰器自下而上应用：先 deco2 包装 func，再 deco1 包装结果。【衍生知识点】顺序影响行为（如 @cache 在 @lru_cache 外层无意义），写日志类装饰器通常放最外层。"
+  },
+  {
+   "type": "blank",
+   "category": "函数高级特性",
+   "question": "闭包变量存储在函数的________属性中（返回 cell 对象元组）。",
+   "answer": [
+    [
+     "__closure__",
+     "__closure__ 属性"
+    ]
+   ],
+   "explanation": "f.__closure__ 是 cell 元组，cell.cell_contents 取实际值。【衍生知识点】无自由变量的函数 __closure__ 为 None；sys.setrecursionlimit 之外，闭包+cell 也是理解 Python 作用域实现的入口。"
+  },
+  {
+   "type": "short",
+   "category": "函数高级特性",
+   "question": "编写一个带参数的重试装饰器说明“三层结构”，并说明每层职责。",
+   "answer": [
+    "def retry(times):\n    # 第 1 层：装饰器工厂，接收装饰器参数 times，返回真正的装饰器\n    def deco(func):\n        # 第 2 层：真正的装饰器，接收被装饰函数\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            # 第 3 层：包装函数，实现重试逻辑\n            for i in range(times):\n                try:\n                    return func(*args, **kwargs)\n                except Exception:\n                    if i == times - 1:\n                        raise\n        return wrapper\n    return deco\n\n@retry(times=3)\ndef flaky(): ...\n使用 @retry(times=3) 时先执行 retry(3) 得到 deco，再用 deco 包装 flaky。【衍生知识点】三层结构中 functools.wraps 放在第 2 层内修饰 wrapper；tenacity 库提供了生产级重试装饰器。"
+   ],
+   "explanation": "带参装饰器=工厂模式的应用，理解三层就理解了所有装饰器。"
+  },
+  {
+   "type": "practical",
+   "category": "函数高级特性",
+   "question": "实现一个计时装饰器 @timer，打印函数名与执行耗时（毫秒，保留 2 位小数），并装饰一个 sleep 0.1 秒的函数验证。",
+   "answer": [
+    "import time, functools\n\ndef timer(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        t0 = time.perf_counter()\n        try:\n            return func(*args, **kwargs)\n        finally:\n            cost = (time.perf_counter() - t0) * 1000\n            print(f\"{func.__name__} 耗时 {cost:.2f} ms\")\n    return wrapper\n\n@timer\ndef work():\n    time.sleep(0.1)\n\nwork()  # work 耗时 100.xx ms\n\n计时用 time.perf_counter（单调高精度）；finally 保证异常时也打印耗时。"
+   ],
+   "explanation": "perf_counter 比 time.time 更适合计时（不受系统时间调整影响）。"
+  }
+ ]
+}

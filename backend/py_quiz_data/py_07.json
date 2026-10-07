@@ -1,0 +1,276 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "def f(a, b=2, *args, **kwargs) 中，f(1, 2, 3, x=4) 调用时 args 与 kwargs 分别是（　）。",
+   "options": [
+    "(3,) 与 {\"x\":4}",
+    "[3] 与 {\"x\":4}",
+    "(2,3) 与 {}",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "位置多出来的 3 被 *args 收集为元组，关键字多出来的 x=4 被 **kwargs 收集为字典；b 由位置参数赋值为 2。【衍生知识点】args 一定是 tuple、kwargs 一定是 dict；调用侧 f(*lst, **d) 是反向解包；常见签名 def f(*args, **kwargs) 用于包装/转发（装饰器标配）。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "def f(x, lst=[]) 的默认参数陷阱是（　）。",
+   "options": [
+    "没有陷阱",
+    "默认列表在函数定义时创建一次，多次调用共享同一列表",
+    "每次调用都会新建列表",
+    "语法错误"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "默认值在 def 执行时求值一次并绑定到函数对象，可变默认值会在多次调用间共享累积。【衍生知识点】正确写法 def f(x, lst=None): lst = [] if lst is None else lst；可用 f.__defaults__ 查看默认值；不可变默认值（int/str/None）无此问题。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "x = 10\ndef f():\n    x = 20\nf()\nprint(x) 的输出是（　）。",
+   "options": [
+    "20",
+    "10",
+    "报错",
+    "None"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "函数内的 x = 20 创建了局部变量，遮蔽（shadow）全局 x，不影响外部。【衍生知识点】要在函数内改全局变量需 global x；改闭包变量用 nonlocal；只读访问外层变量无需声明；LEGB 作用域查找顺序：Local→Enclosing→Global→Builtins。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "下列关于 return 的说法错误的是（　）。",
+   "options": [
+    "函数没有 return 语句时返回 None",
+    "return 可以返回多个值（元组）",
+    "return 会立即结束函数",
+    "一个函数只能有一个 return 语句"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "函数可有多个 return（分支返回），执行到第一个即结束。【衍生知识点】“返回多个值”实际是返回一个元组再解包；只有副作用不返回值的函数（如 print）返回 None，判断函数是否忘记 return 可用结果 is None 检查。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "def f(a, b, /, c, *, d) 中（Python 3.8+），合法的调用是（　）。",
+   "options": [
+    "f(a=1, b=2, c=3, d=4)",
+    "f(1, 2, 3, d=4)",
+    "f(1, 2, c=3, 4)",
+    "f(1, 2, 3, 4)"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "/ 之前只能按位置传（a、b），* 之后只能按关键字传（d），中间 c 两者皆可，因此 f(1, 2, 3, d=4) 与 f(1, 2, c=3, d=4) 均合法。【衍生知识点】PEP 570 位置参数（/）让 API 设计者可以保留参数改名自由（如 max(a, b, /)）；仅关键字参数（*）强制调用方写关键字，避免布尔陷阱。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "def f(x): return x * 2，print(f(3), f(\"a\"), f([1])) 的输出是（　）。",
+   "options": [
+    "6 aa [1, 1]",
+    "6 aa [1, 1, 1, 1]",
+    "6 6 6",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "* 对数字是乘法（6）、对字符串和列表是重复：\"a\"*2=\"aa\"、[1]*2=[1,1]。Python 是动态类型，函数体内不检查类型。【衍生知识点】多态靠“鸭子类型”实现：只要有 __mul__ 行为即可；编写通用函数时不应过度 isinstance 检查，靠文档与协议约定。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "lambda x: x + 1 创建的对象类型是（　）。",
+   "options": [
+    "函数 function",
+    "lambda 类型",
+    "表达式不是对象",
+    "匿名类"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "lambda 创建匿名函数对象，type 是 <class 'function'>，与 def 创建的函数本质相同，只是语法上单表达式、无名字。【衍生知识点】lambda 只能写单个表达式（不能有语句）；适合作 sorted 的 key、map/filter 参数；复杂逻辑应使用 def 并命名；PEP 8 不建议把 lambda 赋值给变量名（用 def 代替）。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "函数文档字符串（docstring）存储在函数的（　）属性中。",
+   "options": [
+    "__doc__",
+    "__name__",
+    "__dict__",
+    "__doc__ 且 help() 可读取"
+   ],
+   "answer": [
+    "D"
+   ],
+   "explanation": "docstring 保存在 __doc__，help(func) 会展示它。【衍生知识点】约定第一行简述，隔空行写详情（PEP 257）；IDE 悬浮提示、Sphinx 文档都读 docstring；__annotations__ 则保存类型注解。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "def f(**kwargs): print(kwargs) 调用 f(a=1, b=2) 输出（　）。",
+   "options": [
+    "{'a': 1, 'b': 2}",
+    "(1, 2)",
+    "a=1 b=2",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "**kwargs 把所有关键字参数收集为字典。【衍生知识点】参数顺序规范：def f(pos_only, /, pos_or_kw, *args, kw_only, **kwargs)； kwargs 常用于配置透传与 API 包装（如 requests 的 **options）。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "关于函数是一等公民（first-class），下列说法正确的是（　）。",
+   "options": [
+    "函数只能被调用",
+    "函数可作为参数、返回值、赋给变量、存入容器",
+    "函数必须先编译",
+    "函数不能嵌套定义"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "Python 中函数与普通对象地位相同：可赋值、传参、返回、放进 list/dict，这是高阶函数与装饰器的基础。【衍生知识点】函数对象带属性（f.count = 0 可做简易计数）；functools.partial 可固定部分参数生成新函数；map/filter/sorted(key=...) 都依赖一等函数。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "print(sorted([\"bb\", \"a\", \"ccc\"], key=len)) 的输出是（　）。",
+   "options": [
+    "['a', 'bb', 'ccc']",
+    "['ccc', 'bb', 'a']",
+    "['a', 'ccc', 'bb']",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "key=len 表示以每个元素的长度作为排序依据，升序得 ['a', 'bb', 'ccc']。【衍生知识点】key 函数比 cmp 更清晰高效；运算符模块提供 itemgetter/attrgetter/methodcaller 替代 lambda，速度更快且支持多级键。"
+  },
+  {
+   "type": "choice",
+   "category": "函数基础",
+   "question": "递归函数必须包含的基本要素是（　）。",
+   "options": [
+    "循环语句",
+    "基准情形（终止条件）与递归调用",
+    "全局变量",
+    "try/except"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "递归 = 问题分解为更小的同类子问题 + 终止条件；缺少终止条件会触发 RecursionError。【衍生知识点】默认递归深度约 1000（sys.getrecursionlimit()）；Python 无尾递归优化，深递归应改写为迭代或用显式栈；带缓存的递归可用 functools.cache（旧名 lru_cache）大幅加速（如斐波那契）。"
+  },
+  {
+   "type": "blank",
+   "category": "函数基础",
+   "question": "在函数内部修改全局变量需要使用________关键字声明。",
+   "answer": [
+    [
+     "global"
+    ]
+   ],
+   "explanation": "global x 声明后赋值才作用于全局名字；不声明时赋值会创建局部变量。【衍生知识点】修改嵌套函数外层变量用 nonlocal（Python 3 引入）；读取外层变量不需要任何声明。"
+  },
+  {
+   "type": "blank",
+   "category": "函数基础",
+   "question": "函数 f 没有 return 语句，则 f() 的返回值是________。",
+   "answer": [
+    [
+     "None"
+    ]
+   ],
+   "explanation": "Python 函数默认返回 None。【衍生知识点】print(f()) 会显示 None；只做副作用的函数（修改可变参数、写文件）惯用隐式返回 None。"
+  },
+  {
+   "type": "blank",
+   "category": "函数基础",
+   "question": "查看函数接受的参数信息可用内置函数________（提示：inspect 模块或内置 ________）。",
+   "answer": [
+    [
+     "help",
+     "inspect.signature",
+     "__doc__"
+    ],
+    [
+     "help",
+     "inspect.signature",
+     "__doc__"
+    ]
+   ],
+   "explanation": "help(f) 显示签名与 docstring；inspect.signature(f) 可编程获取参数列表、默认值与类型（POSITIONAL_ONLY 等）。【衍生知识点】类型注解也可通过 f.__annotations__ 查看；Python 3.14 中注解改为延迟求值（PEP 649）。"
+  },
+  {
+   "type": "blank",
+   "category": "函数基础",
+   "question": "定义函数时，*args 之前最多能有________个 / 分隔符标明仅位置参数区域（填数字，按 PEP 570 语法允许的数量）。",
+   "answer": [
+    [
+     "1"
+    ]
+   ],
+   "explanation": "语法上 / 只能出现一次（或不出现在参数列表中？实际规范允许一个 /）。【衍生知识点】def f(a, b, /, c, *, d) 是四种参数区域的完整示例：仅位置 / 位置或关键字 * 仅关键字 ** 收集。"
+  },
+  {
+   "type": "blank",
+   "category": "函数基础",
+   "question": "f = lambda x, y=10: x + y，则 f(5) 的值是________。",
+   "answer": [
+    [
+     "15"
+    ]
+   ],
+   "explanation": "lambda 同样支持默认参数；y 未传时用默认 10。【衍生知识点】lambda 还支持 *args/**kwargs：lambda *a, **k: (a, k)；但不支持注解与 docstring，需要时用 def。"
+  },
+  {
+   "type": "blank",
+   "category": "函数基础",
+   "question": "def f(*, key): f(1) 会抛________异常。",
+   "answer": [
+    [
+     "TypeError",
+     "TypeError: missing required keyword-only argument"
+    ]
+   ],
+   "explanation": "key 是仅关键字参数，必须写 key=1 传入，按位置传 1 会因缺失关键字参数抛 TypeError。【衍生知识点】这种设计强制调用方写出参数名，避免 bool 开关参数的顺序错误，如 open(..., encoding=\"utf-8\")。"
+  },
+  {
+   "type": "short",
+   "category": "函数基础",
+   "question": "解释 LEGB 作用域规则并举例说明 Enclosing 作用域。",
+   "answer": [
+    "LEGB 是变量名查找顺序：L（Local，函数内部）→ E（Enclosing，外层嵌套函数）→ G（Global，模块级）→ B（Builtins，内置名称）。内层函数可以读取外层函数的变量，这就是闭包的 Enclosing 作用域，例如：\ndef outer():\n    n = 10\n    def inner():\n        return n + 1   # 读取 outer 的 n\n    return inner\n修改 Enclosing 变量需声明 nonlocal。【衍生知识点】作用域在编译期由“赋值位置”决定：函数内一旦有赋值，该名字即视为局部，即使赋值语句在读取之后也会触发 UnboundLocalError——这是常见面试坑。"
+   ],
+   "explanation": "LEGB 是 Python 作用域的核心模型，闭包与装饰器都建立在 E 层之上。"
+  },
+  {
+   "type": "practical",
+   "category": "函数基础",
+   "question": "编写函数 avg(*args)：接收任意多个数字返回平均值，无参数时返回 0；再演示关键字参数版本 stats(**kw) 打印所有键值对。",
+   "answer": [
+    "def avg(*args):\n    return sum(args) / len(args) if args else 0\n\nprint(avg(1, 2, 3))   # 2.0\nprint(avg())          # 0\n\ndef stats(**kw):\n    for k, v in kw.items():\n        print(f\"{k} = {v}\")\n\nstats(name=\"py\", ver=3.13)\n\n输出 2.0、0、以及 name = py / ver = 3.13。"
+   ],
+   "explanation": "*args 收集位置参数为元组；sum/len 组合求均值；**kwargs 收集关键字参数为字典。"
+  }
+ ]
+}

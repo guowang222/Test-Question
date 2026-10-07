@@ -1,0 +1,271 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "import module 与 from module import func 的区别是（　）。",
+   "options": [
+    "完全相同",
+    "前者引入模块对象需用 module.func，后者把 func 绑定进当前命名空间",
+    "后者更快且总是推荐",
+    "前者不能导入自定义模块"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "import 保持命名空间清晰（来源明确）；from 导入缩短调用但可能覆盖同名名字。【衍生知识点】避免 from module import *（污染命名空间）；from x import y as z 解决重名；循环导入优先用 import module 形式并把导入放函数内。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "__name__ == \"__main__\" 判断常写在使用场景（　）。",
+   "options": [
+    "类定义中",
+    "模块文件底部，作为脚本入口判断",
+    "循环内",
+    "装饰器内"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "直接运行该文件时 __name__ 为 \"__main__\"，被导入时为模块名，用来区分“当脚本跑”和“被导入用”。【衍生知识点】python -m pkg.mod 运行时 __name__ 也是 __main__；现代项目入口常放 project/__main__.py 使包可 python -m project 执行。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "一个目录要成为 Python 包，传统上需要包含（　）。",
+   "options": [
+    "setup.py",
+    "__init__.py",
+    "main.py",
+    "README.md"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "带 __init__.py 的目录是常规包（可留空或执行包初始化）；Python 3.3+ 支持无该文件的命名空间包。【衍生知识点】__init__.py 里常写 __all__、版本号、延迟导入以控制公开 API；子包导入路径 pkg.mod 对应 pkg/mod.py。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "创建虚拟环境（隔离项目依赖）的标准命令是（　）。",
+   "options": [
+    "pip install venv",
+    "python -m venv .venv",
+    "pip freeze",
+    "python -m isolate"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "python -m venv .venv 在目录中生成独立解释器与 site-packages；激活后 pip install 的包只装入该环境。【衍生知识点】激活：Windows .venv\\Scripts\\activate、Linux/macOS source .venv/bin/activate；依赖固化 pip freeze > requirements.txt；现代工具 uv/poetry/pdm 管理更高效。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "pip 安装第三方包的正确命令是（　）。",
+   "options": [
+    "install pip numpy",
+    "pip install numpy",
+    "python install numpy",
+    "import numpy"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "pip install 包名；指定版本 pip install numpy==2.1.0，升级用 -U/--upgrade。【衍生知识点】国内加速：-i https://pypi.tuna.tsinghua.edu.cn/simple；pip list/pip show/pip uninstall；生产环境应锁定版本（requirements.txt 或 uv.lock/poetry.lock）。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "模块搜索顺序 sys.path 中，通常排最前的是（　）。",
+   "options": [
+    "site-packages",
+    "脚本所在目录（或当前目录）、PYTHONPATH",
+    "标准库目录",
+    "随机"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "运行脚本时其所在目录排最前，随后是 PYTHONPATH、标准库、site-packages；同名文件会遮蔽标准库。【衍生知识点】命名文件 random.py、json.py 导致 import json 导入自己而报错是最常见事故；sys.path.insert(0, ...) 临时加路径不如安装为包规范。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "if __name__ 之外，模块级代码在（　）执行。",
+   "options": [
+    "只在被导入时执行一次",
+    "每次 import 都重新执行",
+    "永远不执行",
+    "只在直接运行时执行"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "import 会执行模块顶层代码（并缓存到 sys.modules，重复导入不再执行）。【衍生知识点】顶层代码应保持轻量（只定义、不执行重活）；副作用（读配置、开连接）放函数/入口；单例、注册表常利用“仅执行一次”语义。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "__all__ = [\"func_a\"] 在模块中的作用是（　）。",
+   "options": [
+    "禁止导入其他名字",
+    "声明 from module import * 时导入哪些名字（公开 API 白名单）",
+    "加密模块",
+    "加速导入"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "__all__ 控制 * 导入的名单，也是文档工具识别公开 API 的依据；不影响显式导入。【衍生知识点】下划线前缀 _func 是“内部”约定的补充手段；类型检查工具与 IDE 会依据 __all__ 给出建议。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "发生循环导入（circular import）的根本原因通常是（　）。",
+   "options": [
+    "Python 版本太低",
+    "两个模块在顶层相互 import，且在导入时就需要对方的属性",
+    "包没有 __init__.py",
+    "没写 __all__"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "A 导入 B，B 顶层又导入 A，而 A 尚未执行完，导致半初始化模块被引用而 AttributeError。【衍生知识点】解法：1) 合并模块；2) 把导入移到函数内部（延迟导入）；3) 只 import 模块而非 from A import name；4) 抽出公共依赖到第三个模块。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "相对导入 from . import utils 只能用于（　）。",
+   "options": [
+    "任何脚本",
+    "包内部模块（不能直接作为脚本运行）",
+    "REPL",
+    "标准库"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "相对导入基于 __package__，顶层脚本运行时为空而报 attempted relative import with no known parent package。【衍生知识点】包内模块要用 python -m pkg.mod 运行；绝对导入（from pkg import utils）是更推荐的显式风格（PEP 328）。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "发布包到 PyPI 的现代标准工具链是（　）。",
+   "options": [
+    "python setup.py install",
+    "pyproject.toml（PEP 517/518）+ build + twine 或 uv publish",
+    "zip 上传",
+    "git push"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "pyproject.toml 声明构建系统与元数据（PEP 621），python -m build 生成 sdist/wheel，twine upload 或 uv publish 发布。【衍生知识点】setup.py 已属遗留；wheel 是预编译分发格式安装更快；uv（Rust 实现）已成为新一代高速工具链。"
+  },
+  {
+   "type": "choice",
+   "category": "模块与包",
+   "question": "运行 python -m http.server 的作用是（　）。",
+   "options": [
+    "安装 http 库",
+    "以当前目录为根启动一个简易静态文件服务器",
+    "编译 http 模块",
+    "下载网页"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "-m 以模块方式运行标准库 http.server，默认在 8000 端口提供目录浏览/静态服务，常用于局域网共享文件。【衍生知识点】-m 还能跑 python -m venv、python -m pip、python -m timeit 基准测试；自己项目写 __main__.py 后同样可 -m 运行。"
+  },
+  {
+   "type": "blank",
+   "category": "模块与包",
+   "question": "模块被首次导入后会缓存在 sys.________ 中，再次导入不会重新执行。",
+   "answer": [
+    [
+     "modules"
+    ]
+   ],
+   "explanation": "sys.modules 是全局模块缓存字典。【衍生知识点】强制重载可用 importlib.reload(mod)（开发调试用）；删除缓存条目可模拟“未导入”状态，但有风险。"
+  },
+  {
+   "type": "blank",
+   "category": "模块与包",
+   "question": "当前脚本的搜索路径列表保存在 sys.________，可临时插入自定义路径。",
+   "answer": [
+    [
+     "path"
+    ]
+   ],
+   "explanation": "sys.path 是字符串列表，按顺序查找模块。【衍生知识点】优先级高于它的还有内建模块（builtins）；永久修改应设置 PYTHONPATH 环境变量或将包安装进环境。"
+  },
+  {
+   "type": "blank",
+   "category": "模块与包",
+   "question": "列出已安装第三方包及其版本的命令是 pip ________。",
+   "answer": [
+    [
+     "list",
+     "freeze"
+    ]
+   ],
+   "explanation": "pip list 显示已装包；pip freeze 输出 requirements 格式（包==版本）。【衍生知识点】pip show pkg 查看单个包详情与依赖；pipdeptree 可展示依赖树。"
+  },
+  {
+   "type": "blank",
+   "category": "模块与包",
+   "question": "from utils import helper as h 中 as 的作用是________。",
+   "answer": [
+    [
+     "重命名（别名）"
+    ]
+   ],
+   "explanation": "as 把导入的名字绑定到新名字，用于解决冲突或缩短长名。【衍生知识点】常见惯例：import numpy as np、import pandas as pd；as 还用于 with...as 和 except...as。"
+  },
+  {
+   "type": "blank",
+   "category": "模块与包",
+   "question": "Python 3.3+ 允许目录不含 __init__.py 而成为________包（用于多版本混合安装等场景）。",
+   "answer": [
+    [
+     "命名空间",
+     "namespace"
+    ]
+   ],
+   "explanation": "命名空间包由多个目录片段合并而成，无单一 __init__。【衍生知识点】常规包有 __init__.py 且行为更可控，一般项目仍推荐常规包；PEP 420 定义命名空间包。"
+  },
+  {
+   "type": "blank",
+   "category": "模块与包",
+   "question": "在函数内部延迟导入（把 import 写进函数体）常用于解决________导入问题和减少启动开销。",
+   "answer": [
+    [
+     "循环",
+     "循环导入"
+    ]
+   ],
+   "explanation": "导入发生在调用时而非模块加载时，彼时双方模块都已初始化完毕。【衍生知识点】延迟导入也是插件系统的常用手段（按需加载重型依赖，如 matplotlib、torch）。"
+  },
+  {
+   "type": "short",
+   "category": "模块与包",
+   "question": "说明 python file.py、python -m module、import module 三种方式下 __name__ 与 __main__ 的关系及入口代码放置建议。",
+   "answer": [
+    "1) python file.py：file 的 __name__ 为 \"__main__\"，作为主程序执行；2) python -m pkg.mod：pkg.mod 的 __name__ 也是 \"__main__\"，但包的 __init__.py 会先执行；3) import module：module 的 __name__ 为模块名，顶层代码只执行一次并缓存。建议：模块只定义函数/类，入口逻辑放在 if __name__ == \"__main__\": 下；包入口放 pkg/__main__.py。这样同一文件既能复用又能执行。【衍生知识点】入口处建议用 argparse 处理参数并返回退出码 sys.exit(main())，便于脚本化与测试。"
+   ],
+   "explanation": "__name__ 语义是理解 Python 程序结构的基础。"
+  },
+  {
+   "type": "practical",
+   "category": "模块与包",
+   "question": "创建包 mymath：__init__.py 导出 add 函数，mymath/ops.py 实现加与乘；在包外通过 from mymath import add 调用并演示 __all__ 的作用。",
+   "answer": [
+    "目录结构：\nmymath/\n    __init__.py\n    ops.py\n\n# mymath/ops.py\ndef add(a, b):\n    return a + b\n\ndef mul(a, b):\n    return a * b\n\n# mymath/__init__.py\nfrom mymath.ops import add\n__all__ = [\"add\"]\n\n# 外部使用\nfrom mymath import add        # OK\n# from mymath import mul      # not exported, 但显式导入仍可用\nprint(add(2, 3))              # 5\n\n__all__ 只影响 import *；显式 from mymath.ops import mul 依然可行，因此 __all__ 是 API 声明而非权限控制。"
+   ],
+   "explanation": "开发期把包目录放项目根，或在包目录内启动解释器，import mymath 即生效。"
+  }
+ ]
+}

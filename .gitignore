@@ -1,0 +1,30 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+.python-version
+
+# ---- Django ----
+# SQLite 数据库：改由题源脚本 / exports/questions.json 重新生成，不入库
+db.sqlite3
+*.sqlite3-journal
+# 数据库备份
+backend/backups/
+
+# ---- 编辑器 / 系统 ----
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 临时文件 ----
+*.log
+*.tmp
+~$*

@@ -1,0 +1,278 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "lst = [1, 2, 3]，lst.append([4, 5]) 后 lst 是（　）。",
+   "options": [
+    "[1, 2, 3, 4, 5]",
+    "[1, 2, 3, [4, 5]]",
+    "[1, 2, 3, 4]",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "append 把参数整体作为一个元素追加到末尾；想逐个并入应使用 extend 或 +=。【衍生知识点】append 是 O(1)（均摊），insert(0, x) 是 O(n)；批量并入中 extend(iterable) 比 append 循环更快，CPython 会预分配容量。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "lst = [1, 2, 3]，下列哪个操作会修改原列表？",
+   "options": [
+    "lst + [4]",
+    "lst.append(4)",
+    "sorted(lst)",
+    "lst[:]"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "append 原地修改并返回 None；+ 与 sorted 返回新列表；lst[:] 是浅拷贝。【衍生知识点】in-place 方法（append/sort/reverse/extend）按惯例返回 None，这正是写成 lst = lst.sort() 会得到 None 的原因；sorted() 与 list.sort() 的关系同理。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "lst = [3, 1, 2]，lst.sort() 与 sorted(lst) 的正确说法是（　）。",
+   "options": [
+    "两者都返回新列表",
+    "lst.sort() 原地排序返回 None，sorted(lst) 返回新列表",
+    "两者都原地修改",
+    "sorted(lst) 原地修改返回 None"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "list.sort() 是原地方法（返回 None，惯例）；sorted() 是内置函数，接受任何可迭代对象并返回新列表，原对象不变。【衍生知识点】两者都支持 key 与 reverse 参数：sorted(lst, key=len, reverse=True)；多级排序用 key=lambda x: (x[0], -x[1])；稳定排序（Timsort）保证相等元素保持原相对顺序。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "lst = [1, 2, 3, 4, 5]，lst[1:4] 与 lst[-2:] 分别是（　）。",
+   "options": [
+    "[2,3,4] 与 [4,5]",
+    "[1,2,3] 与 [5]",
+    "[2,3,4,5] 与 [4,5]",
+    "[2,3,4] 与 [5]"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "[1:4) 取索引 1~3；负索引 -2 表示倒数第二个元素，[-2:] 取最后两个。【衍生知识点】常用技巧：lst[:] 复制列表、lst[::-1] 反转、del lst[1:3] 切片删除；len(lst) 为 n 时 lst[n:] 得空列表而不报错。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "a = [1, 2]; b = a; b.append(3) 后，a 的值是（　）。",
+   "options": [
+    "[1, 2]",
+    "[1, 2, 3]",
+    "报错",
+    "不确定"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "b = a 只是复制引用，两个名字指向同一列表对象，因此通过 b 的修改对 a 可见。【衍生知识点】想要独立副本：浅拷贝 a.copy()/a[:]/list(a)（仅复制第一层），嵌套结构需深拷贝 copy.deepcopy(a)；这是 Python 最常见的坑之一。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "lst = [1, 2, 2, 3]，lst.remove(2) 后 lst 是（　）。",
+   "options": [
+    "[1, 3]",
+    "[1, 2, 3]",
+    "[1, 2, 3, 2]",
+    "[1, 2, 3] 或报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "remove(x) 只删除第一个值为 x 的元素，不存在时抛 ValueError。【衍生知识点】按索引删除用 pop(i)（默认删末尾并返回该元素）或 del lst[i]；清除全部匹配：lst = [x for x in lst if x != 2]；判断存在用 in 运算符。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "关于元组，下列说法错误的是（　）。",
+   "options": [
+    "元组是不可变序列",
+    "元组可以作为字典的键",
+    "t = (5) 创建的是含一个元素的元组",
+    "t = 1, 2 是合法的元组"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "(5) 只是带括号的整数 5，单元素元组必须写 (5,)（逗号是关键）。A、B、D 均正确，元组字面量甚至可以省略括号。【衍生知识点】单元素元组的逗号陷阱是经典考点：type((1)) 是 int、type((1,)) 是 tuple；函数返回单值加逗号会意外变成元组。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "a, *b, c = 1, 2, 3, 4, 5 后，b 的值是（　）。",
+   "options": [
+    "[2, 3, 4]",
+    "(2, 3, 4)",
+    "2",
+    "报错"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "带星号的变量收集中间元素为一个列表，两侧普通变量各取一个。【衍生知识点】解包中带 * 的变量总是得到 list，且每侧只能有一个；*b 也可用于函数调用解包：print(*[1,2,3]) 即 print(1, 2, 3)。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "列表推导式 [x*x for x in range(5) if x % 2 == 0] 的结果是（　）。",
+   "options": [
+    "[0, 4, 16]",
+    "[1, 9]",
+    "[0, 1, 4, 9, 16]",
+    "[0, 4]"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "range(5) 为 0~4，if 过滤出偶数 0、2、4，再平方得 [0, 4, 16]。【衍生知识点】推导式优于等价的 for+append（更快且意图清晰）；还有字典推导 {k: v for ...}、集合推导、生成器表达式 (x*x for x in ...)；双重循环推导 [x+y for x in a for y in b] 相当于嵌套 for。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "list(range(1, 10, 3)) 的结果是（　）。",
+   "options": [
+    "[1, 4, 7]",
+    "[1, 4, 7, 10]",
+    "[1, 3, 6, 9]",
+    "[3, 6, 9]"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "range(start, stop, step) 左闭右开且不含 stop，从 1 起步长 3 到 10 之前：1, 4, 7。【衍生知识点】range 是惰性序列对象，支持负步长 range(5, 0, -1)；range 支持 in 判断与索引，但不是列表；空 range 不报错。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "zip([1, 2], ['a', 'b', 'c']) 转成列表后的结果是（　）。",
+   "options": [
+    "[(1,'a'), (2,'b'), (None,'c')]",
+    "[(1,'a'), (2,'b')]",
+    "报错",
+    "[(1,'a'), (2,'b'), (3,'c')]"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "zip 按最短的序列截断（strict=False 默认）。【衍生知识点】zip(it1, it2, strict=True)（3.10+）长度不齐时报 ValueError；zip(*matrix) 可实现矩阵转置；itertools.zip_longest 用 fillvalue 补齐。"
+  },
+  {
+   "type": "choice",
+   "category": "列表与元组",
+   "question": "元组相比列表的主要优势是（　）。",
+   "options": [
+    "元素可以修改",
+    "更占内存",
+    "不可变、可哈希，可作为字典键且更省内存",
+    "只能存同类型元素"
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "不可变使元组可哈希（可作 dict 键、集合元素）、可安全地在多线程间共享、内存布局更紧凑。【衍生知识点】函数多返回值、常量记录（坐标、RGB）优先用元组；namedtuple/dataclass(frozen=True) 是带字段名的升级版；CPython 对常量元组还有编译期缓存优化。"
+  },
+  {
+   "type": "blank",
+   "category": "列表与元组",
+   "question": "lst = [10, 20, 30]，lst.pop() 的返回值是________，此时 lst 为________。",
+   "answer": [
+    [
+     "30"
+    ],
+    [
+     "[10, 20]"
+    ]
+   ],
+   "explanation": "pop() 不带参数删除并返回最后一个元素。【衍生知识点】pop(0) 删除首元素但是 O(n)，队列场景应使用 collections.deque 的 popleft()（O(1)）。"
+  },
+  {
+   "type": "blank",
+   "category": "列表与元组",
+   "question": "[0] * 3 的值是________；[[0] * 3] * 2 创建的二维列表中修改 [0][0] 会________（影响/不影响）另一行。",
+   "answer": [
+    [
+     "[0, 0, 0]"
+    ],
+    [
+     "影响"
+    ]
+   ],
+   "explanation": "[[0]*3]*2 的两行是同一个列表对象的两个引用，改一行另一行跟着变。【衍生知识点】正确创建二维列表：[[0]*3 for _ in range(2)]，每行独立；乘法复制引用对不可变元素（int）无害，对可变元素（list）是经典陷阱。"
+  },
+  {
+   "type": "blank",
+   "category": "列表与元组",
+   "question": "lst = [3, 1, 2]，执行 lst.sort(reverse=True) 后 lst 为________。",
+   "answer": [
+    [
+     "[3, 2, 1]"
+    ]
+   ],
+   "explanation": "sort 原地降序排序，reverse=True 表示降序。【衍生知识点】对字符串列表按长度排序：lst.sort(key=len)；多条件排序 key=lambda x: (x.age, -x.score)。"
+  },
+  {
+   "type": "blank",
+   "category": "列表与元组",
+   "question": "max([1, 5, 3]) 的值是________；sum([1, 2, 3]) 的值是________。",
+   "answer": [
+    [
+     "5"
+    ],
+    [
+     "6"
+    ]
+   ],
+   "explanation": "max/min/sum 是内置聚合函数，可直接作用于可迭代对象。【衍生知识点】max 搭配 key：max(words, key=len) 取最长单词；sum(range(101)) 得 5050；空序列求 max 会报 ValueError，可用 default 参数兜底。"
+  },
+  {
+   "type": "blank",
+   "category": "列表与元组",
+   "question": "[x for x in \"abc\"] 的值是________。",
+   "answer": [
+    [
+     "['a', 'b', 'c']",
+     "['a','b','c']"
+    ]
+   ],
+   "explanation": "字符串是可迭代对象，逐字符迭代。【衍生知识点】list(\"abc\") 等价；想按空格分词用 s.split()；list(dict) 得到键列表，list(zip(a, b)) 得到配对元组列表。"
+  },
+  {
+   "type": "blank",
+   "category": "列表与元组",
+   "question": "t = (1, [2, 3])，执行 t[1].append(4) 是________（合法/不合法）的。",
+   "answer": [
+    [
+     "合法"
+    ]
+   ],
+   "explanation": "元组的不可变指“槽位不可重新绑定”，t[1] 引用的列表自身内容可以修改，修改后元组内容“看起来”变了但对象身份未变。【衍生知识点】因此含可变元素的元组不可哈希，不能作字典键——hash((1, [2])) 会抛 TypeError。"
+  },
+  {
+   "type": "short",
+   "category": "列表与元组",
+   "question": "比较列表与元组，并说明各自典型的使用场景。",
+   "answer": [
+    "相同点：都是有序序列，支持索引、切片、迭代、len 等。不同点：1) 可变性——列表可增删改，元组不可变；2) 可哈希性——元组（含不可变元素时）可作字典键/集合成员；3) 内存与性能——元组更紧凑、创建更快；4) 语义——列表表示“同类多个元素的可变集合”，元组表示“结构固定的异构记录”。场景：动态集合、栈/队列用列表；坐标、数据库行、函数多返回值、字典复合键用元组。【衍生知识点】collections.namedtuple 与 typing.NamedTuple 让元组具备字段名；标准库内部大量用元组传递固定结构数据。"
+   ],
+   "explanation": "列表=可变集合，元组=不可变记录，语义优先。"
+  },
+  {
+   "type": "practical",
+   "category": "列表与元组",
+   "question": "编写程序：用列表推导式生成 1~100 中所有能被 3 整除但不能被 5 整除的数，输出其数量与最后 5 个数。",
+   "answer": [
+    "nums = [x for x in range(1, 101) if x % 3 == 0 and x % 5 != 0]\nprint(len(nums))   # 27\nprint(nums[-5:])   # [63, 66, 69, 72, 78]\n\n共 27 个，最后 5 个为 [63, 66, 69, 72, 78]。"
+   ],
+   "explanation": "切片 nums[-5:] 取末尾 5 个元素；推导式内多个条件用 and 连接。"
+  }
+ ]
+}

@@ -1,0 +1,269 @@
+{
+ "questions": [
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "导入正则模块的语句是（　）。",
+   "options": [
+    "import re",
+    "import regex（第三方，非标准库）",
+    "import regexp",
+    "from re import *（不推荐但可行）"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "标准库为 re；第三方 regex 库功能更多（递归匹配等）但需安装。【衍生知识点】re 是标准库中少数自带缓存的模块（编译后的 pattern 会缓存），频繁使用时仍建议预编译 re.compile 提速并复用。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "re.match 与 re.search 的区别是（　）。",
+   "options": [
+    "完全一样",
+    "match 只从字符串开头匹配，search 扫描全串找第一个匹配",
+    "search 只匹配开头",
+    "match 返回列表"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "match 锚定开头（失败返回 None），search 找任意位置的第一个匹配；re.fullmatch 要求整串匹配。【衍生知识点】判断“以 xx 开头”也可用 startswith（更快）；三者都返回 Match 对象或 None，取内容用 m.group()/m.group(1)。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "正则中 \\d、\\w、\\s 分别表示（　）。",
+   "options": [
+    "数字 / 字母数字下划线 / 空白符",
+    "小写字母 / 单词 / 空格",
+    "任意字符 / 通配 / 制表符",
+    "数字 / 汉字 / 空格"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "\\d=[0-9]，\\w=[a-zA-Z0-9_]，\\s=[ \\t\\n\\r\\f\\v]；大写 \\D/\\W/\\S 取反。【衍生知识点】默认 Unicode 模式下 \\d 也能匹配全角数字、\\w 匹配中文；要严格 ASCII 加 re.ASCII 标志。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "re.findall(r\"\\d+\", \"a1b22c333\") 的结果是（　）。",
+   "options": [
+    "['1','22','333']",
+    "['1','2','2','3','3','3']",
+    "1 个 Match 对象",
+    "None"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "findall 返回所有匹配的字符串列表；贪婪 \\d+ 一次吞掉连续数字。【衍生知识点】若模式含分组，findall 返回分组内容而非整匹配；需要 Match 对象（位置信息）用 finditer。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "正则量词默认是（　）。",
+   "options": [
+    "懒惰的（最少匹配）",
+    "贪婪的（最多匹配），加 ? 变懒惰",
+    "必须显式指定",
+    "随机"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "*、+、{m,n} 贪婪，尽量多吃；量词后加 ?（如 .*?）变为非贪婪最少匹配。【衍生知识点】HTML 提取经典：re.findall(r\"<a>(.*?)</a>\", s) 用非贪婪避免跨标签吞并；还有占有优先量词（regex 库）防回溯爆炸。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "分组 (\\d{4})-(\\d{2}) 中提取第一个分组用（　）。",
+   "options": [
+    "m.group(0)",
+    "m.group(1)",
+    "m[0]",
+    "m.first"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "group(0) 是整个匹配，group(1)、group(2) 是第 1、2 个捕获组；命名组 (?P<year>\\d{4}) 可用 m.group(\"year\")。【衍生知识点】(?:...) 非捕获组不编号不捕获，提升性能与可读性；m.groups() 返回所有组元组。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "re.sub(r\"\\s+\", \" \", \"a   b\") 的作用是（　）。",
+   "options": [
+    "查找",
+    "把连续空白替换为单个空格，得 \"a b\"",
+    "切分字符串",
+    "验证格式"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "sub(pattern, repl, string) 替换全部匹配；count 参数限制次数。【衍生知识点】repl 可以是函数（接收 Match 返回替换串），实现大小写转换等动态替换；subn 额外返回替换次数。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "匹配手机号 11 位数字且完整独立的正则是（　）。",
+   "options": [
+    "r\"\\d{11}\"",
+    "r\"^\\d{11}$\"",
+    "r\"\\d+\"",
+    "r\"\\b\\d{11}\\b\"（词边界也可，具体看场景）"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "^...$ 锚定首尾保证整串恰好 11 位；不带锚点的 \\d{11} 会从长串中截取前 11 位。【衍生知识点】真正校验中国手机号用 r\"1[3-9]\\d{9}\"；锚点在多行模式 re.M 下 ^$ 变为按行锚定。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "re.IGNORECASE（或 re.I）标志的作用是（　）。",
+   "options": [
+    "忽略空白",
+    "忽略大小写匹配",
+    "全局匹配",
+    "多行模式"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "re.I 大小写不敏感；常用标志还有 re.M 多行、re.S 让 . 也匹配换行、re.X 详细模式（可写注释与空格）。【衍生知识点】标志可用 (?i) 内联写在模式中；re.S 解决 . 不匹配 \\n 的问题，抓多行内容必备。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "验证邮箱最稳妥的建议是（　）。",
+   "options": [
+    "用极其复杂的正则覆盖所有 RFC 规则",
+    "简单正则粗校验格式 r\"^[\\w.+-]+@[\\w-]+\\.[\\w.-]+$\"，真正验证靠发送确认邮件",
+    "用 int() 转换",
+    "不存在邮箱"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "完整邮箱 RFC 5322 语法复杂到不适合正则；实践中格式粗校验 + 邮件确认是标准做法。【衍生知识点】html/email 模块处理邮件头；解析已验证的地址可用 email.utils.parseaddr；校验逻辑避免过度设计。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "预编译正则的好处是（　）。",
+   "options": [
+    "pattern = re.compile(r\"\\d+\") 后可复用且匹配更快、可读性更好",
+    "编译后不能再修改",
+    "必须编译",
+    "只能用一次"
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "compile 返回 Pattern 对象，方法 match/search/sub 一致；re 模块内部也有缓存，但显式编译在循环中仍最快。【衍生知识点】Pattern 对象线程安全可全局复用；pattern.fullmatch().groupdict() 配命名组可解析配置行。"
+  },
+  {
+   "type": "choice",
+   "category": "正则表达式",
+   "question": "re.split(r\"[,;]\", \"a,b;c\") 的结果是（　）。",
+   "options": [
+    "['a,b;c']",
+    "['a', 'b', 'c']",
+    "['a', ';', 'c']",
+    "报错"
+   ],
+   "answer": [
+    "B"
+   ],
+   "explanation": "字符类 [,;] 匹配逗号或分号作为分隔符。【衍生知识点】带捕获组的分隔符会保留在结果中：re.split(r\"(,)\", \"a,b\") 得 ['a', ',', 'b']；maxsplit 限制切分次数。"
+  },
+  {
+   "type": "blank",
+   "category": "正则表达式",
+   "question": "正则中匹配任意单个字符（除换行）的元字符是________。",
+   "answer": [
+    [
+     "."
+    ]
+   ],
+   "explanation": ". 默认不匹配 \\n；re.S（DOTALL）下可匹配包括换行在内的任意字符。【衍生知识点】匹配字面量点号需转义 \\.。"
+  },
+  {
+   "type": "blank",
+   "category": "正则表达式",
+   "question": "量词 + 表示前面的元素出现________次或更多。",
+   "answer": [
+    [
+     "1"
+    ]
+   ],
+   "explanation": "+ 等价 {1,}；* 等价 {0,}；? 等价 {0,1}。【衍生知识点】精确 m 到 n 次写 {m,n}，恰好 m 次写 {m}。"
+  },
+  {
+   "type": "blank",
+   "category": "正则表达式",
+   "question": "非贪婪匹配在量词后追加________符号。",
+   "answer": [
+    [
+     "?"
+    ]
+   ],
+   "explanation": ".*? 尽量少匹配；?? 与 {m,n}? 同理。【衍生知识点】非贪婪配合边界锚点可精准提取最短片段，如引号内容 \"(.*?)\"。"
+  },
+  {
+   "type": "blank",
+   "category": "正则表达式",
+   "question": "命名分组语法 (?P<name>pattern) 中，取值用 m.group(________)。",
+   "answer": [
+    [
+     "name",
+     "\"name\""
+    ]
+   ],
+   "explanation": "命名组按名字取值，可读性远好于数字下标。【衍生知识点】groupdict() 一次性取全部命名组字典；反向引用命名组 (?P=name)。"
+  },
+  {
+   "type": "blank",
+   "category": "正则表达式",
+   "question": "让点号匹配换行符的编译标志是 re.________（简写 re.S）。",
+   "answer": [
+    [
+     "DOTALL"
+    ]
+   ],
+   "explanation": "re.S/re.DOTALL 使 . 匹配任意字符含 \\n。【衍生知识点】相对地 re.M/re.MULTILINE 改变 ^ $ 为行首行尾语义。"
+  },
+  {
+   "type": "blank",
+   "category": "正则表达式",
+   "question": "在字符串中写正则 r\"\\d+\"，r 前缀的作用是________。",
+   "answer": [
+    [
+     "原始字符串（不做转义处理，\\d 原样传给正则引擎）"
+    ]
+   ],
+   "explanation": "不用 r 前缀时 \\d 会先被字符串转义处理（\\d 恰好保留但 \\b 等会被误解为退格）。【衍生知识点】正则一律用 r-string 是最佳实践；Windows 路径也用 r\"C:\\dir\"。"
+  },
+  {
+   "type": "short",
+   "category": "正则表达式",
+   "question": "说明贪婪与非贪婪匹配的差异，并举例说明回溯导致的性能问题（灾难性回溯）。",
+   "answer": [
+    "贪婪量词尽量多吃字符，非贪婪（量词+?）尽量少吃。例如对 \"<a>x</a><a>y</a>\"：<a>.*</a> 贪婪会吞到最后一个 </a>，而非贪婪 <a>.*?</a> 在第一个 </a> 停下。性能问题：嵌套量词如 (a+)+ 匹配失败时引擎回溯组合呈指数级爆炸（灾难性回溯），一条恶意输入可拖垮 CPU。防范：1) 明确字符类替代通配 .*；2) 使用占有量词或原子组（第三方 regex 库）；3) 限制输入长度；4) 复杂解析放弃正则（HTML 用 BeautifulSoup）。【衍生知识点】Python 3.11 起 re 模块对部分回溯模式做了优化，但原理上无法完全免疫。"
+   ],
+   "explanation": "非贪婪 + 边界 + 字符类是安全正则三件套。"
+  },
+  {
+   "type": "practical",
+   "category": "正则表达式",
+   "question": "从文本 logs = \"2026-09-27 ERROR disk full; 2026-09-28 INFO ok\" 中提取所有 (日期, 级别, 消息) 三元组并打印。",
+   "answer": [
+    "import re\nlogs = \"2026-09-27 ERROR disk full; 2026-09-28 INFO ok\"\npat = re.compile(r\"(\\d{4}-\\d{2}-\\d{2})\\s+(\\w+)\\s+([^;]+)\")\nfor date, level, msg in pat.findall(logs):\n    print(date, level, msg.strip())\n\n输出两行：2026-09-27 ERROR disk full 与 2026-09-28 INFO ok；命名组写法 (?P<date>\\d{4}-...) 更可读。"
+   ],
+   "explanation": "findall 返回元组列表，可直接解包三个变量；[^;]+ 吃到分号前保证消息完整。"
+  }
+ ]
+}
