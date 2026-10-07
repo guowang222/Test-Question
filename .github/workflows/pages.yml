@@ -34,32 +34,33 @@ jobs:
       - uses: actions/checkout@v4
 
       # configure-pages@5 在 Pages 尚未启用时会失败（首次部署必踩）。
-      # 所以先探测，没启用就用 API 把它启起来（build_type=workflow），省得手动进设置页。
-      - name: 确保 Pages 已启用
+      # 这里先探测，没启用就用 API 启起来。注意：即使自动启用失败也不中断 workflow
+      # （continue-on-error），让后续 configure-pages 照常尝试，并由它的报错作为主因呈现。
+      - name: 尝试自动启用 Pages
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
           repo="${GITHUB_REPOSITORY}"
           if curl -fsS -H "Authorization: Bearer $GH_TOKEN" \
                -H "Accept: application/vnd.github+json" \
                "https://api.github.com/repos/$repo/pages" >/dev/null 2>&1; then
-            echo "Pages 已启用，跳过开启步骤"
+            echo "Pages 已启用，无需处理"
             exit 0
           fi
-          echo "::notice::Pages 尚未启用，正在通过 API 启用…"
+          echo "::notice::Pages 尚未启用，尝试通过 API 启用（build_type=workflow）"
           code=$(curl -sS -o /tmp/pg.json -w '%{http_code}' -X POST \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/$repo/pages" \
             -d '{"build_type":"workflow"}')
+          echo "POST /pages 返回 HTTP $code"
+          echo "响应体："
+          cat /tmp/pg.json; echo
           if [ "$code" = "201" ] || [ "$code" = "200" ]; then
-            echo "::notice::Pages 启用成功（HTTP $code）"
+            echo "::notice::Pages 自动启用成功"
           else
-            echo "::error::自动启用 Pages 失败（HTTP $code）"
-            cat /tmp/pg.json
-            echo "::error::请手动打开 Settings -> Pages，把 Source 选为 GitHub Actions 后重跑"
-            exit 1
+            echo "::warning::自动启用未成功（HTTP $code），继续尝试 configure-pages"
           fi
 
       - name: 配置 Pages
