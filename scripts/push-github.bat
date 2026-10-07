@@ -27,13 +27,15 @@ echo.
 echo [3/3] 校验远端与本地是否一致…
 for /f "tokens=1" %%h in ('"%GIT_EXE%" -C "%~dp0.." rev-parse HEAD') do set LOCAL=%%h
 for /f "tokens=1" %%h in ('"%GIT_EXE%" -C "%~dp0.." rev-parse github/master') do set REMOTE=%%h
-echo 本地 HEAD      : %LOCAL%
+echo 本地 HEAD          : %LOCAL%
 echo 远端 github/master : %REMOTE%
 
 echo.
-echo [完成] 代码已推送。
-echo 还需最后一步：打开
+echo [完成] 代码已推送，Actions 会自动部署。
+echo 查看进度： https://github.com/guowang222/Test-Question/actions
+echo 线上地址： https://guowang222.github.io/Test-Question/
+echo.
+echo 若显示 Pages 尚未启用（首次使用需要一次），请打开
 echo   https://github.com/guowang222/Test-Question/settings/pages
-echo 把 Source 选为 GitHub Actions，等待 Actions 跑完。
-echo 部署地址： https://guowang222.github.io/Test-Question/
+echo 把 Source 选为 GitHub Actions，保存后 Actions 会自动重跑。
 pause
